@@ -35,9 +35,9 @@
 
 O projeto utiliza diferentes arquivos `.env` para separar variáveis de ambiente por contexto:
 
-- `.env`: Variáveis padrão, usadas em todos os ambientes se não houver override.
-- `.env.test`: Usado durante a execução dos testes unitários (Vitest). Permite mocks, endpoints e configs específicas para testes.
-- `.env.e2e`: Usado durante os testes end-to-end (Playwright). Ideal para apontar para ambientes de homologação, mocks ou configs de e2e.
+- `.env.development`: Carregado automaticamente pelo Vite quando rodando o projeto em modo desenvolvimento (`pnpm dev`).
+- `.env.test`: Carregado explicitamente nos scripts de teste unitário via `dotenv-cli` (ex: `pnpm test`, `pnpm test:unit`). Não é carregado automaticamente pelo Vite.
+- `.env.e2e`: Carregado explicitamente nos scripts de teste e2e via `dotenv-cli` (ex: `pnpm test:e2e`). Não é carregado automaticamente pelo Vite.
 
 > Dica: Nunca coloque segredos ou credenciais sensíveis em arquivos `.env` versionados.
 
@@ -50,7 +50,7 @@ Veja todos os scripts no `package.json`. Os principais são:
 | `dev`             | Inicia o servidor de desenvolvimento                  |
 | `dev:test`        | Inicia o Vite com variáveis de ambiente de teste      |
 | `dev:test:e2e`    | Inicia o Vite com variáveis de ambiente de e2e        |
-| `lint`            | Executa o ESLint para análise de código               |
+| `lint`            | Executa o BiomeJs para análise de código              |
 | `test`            | Roda todos os testes unitários com Vitest             |
 | `test:watch`      | Roda testes unitários em modo observação              |
 | `test:coverage`   | Gera relatório de cobertura dos testes unitários      |
