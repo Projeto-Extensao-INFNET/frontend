@@ -5,6 +5,7 @@
 - [**FUTURO NOME DO PROJETO**](#futuro-nome-do-projeto)
   - [Índice](#índice)
   - [Sobre o Projeto](#sobre-o-projeto)
+    - [FUTURO RESUMO DO PROJETO](#futuro-resumo-do-projeto)
   - [Tecnologias Utilizadas](#tecnologias-utilizadas)
   - [Arquivos .env](#arquivos-env)
   - [Scripts Disponíveis](#scripts-disponíveis)
@@ -16,7 +17,7 @@
 
 ## Sobre o Projeto
 
-**FUTURO RESUMO DO PROJETO**
+### FUTURO RESUMO DO PROJETO
 
 ## Tecnologias Utilizadas
 
