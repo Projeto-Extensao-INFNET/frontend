@@ -8,11 +8,8 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     environment: 'jsdom',
-
     globals: true,
-
     fileParallelism: false,
-
     setupFiles: ['vitest.setup.ts'],
     globalSetup: ['vitest.global.setup.ts'],
     include: ['src/**/*.{spec,test}.{ts,tsx}'],
