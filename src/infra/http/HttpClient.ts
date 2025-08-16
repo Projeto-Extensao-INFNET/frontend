@@ -9,7 +9,7 @@ export class HttpClient implements IHttpClient {
   private constructor(private api: AxiosInstance = axios) {}
 
   // método para enviar as requisições HTTP
-  async sendRequest<TResponse, TBody>(props: HttpRequest<TBody>) {
+  async request<TResponse, TBody>(props: HttpRequest<TBody>) {
     const { endpoint, method, body, headers } = props;
 
     try {

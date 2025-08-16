@@ -18,7 +18,7 @@ export type HttpRequest<TBody> = {
 // Interface que define o contrato do HttpClient
 export interface IHttpClient {
   // método para enviar requisições
-  sendRequest: <TResponse, TBody = unknown>(
+  request: <TResponse, TBody = unknown>(
     request: HttpRequest<TBody>
   ) => Promise<TResponse>;
 }
