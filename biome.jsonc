@@ -3,8 +3,13 @@
   "extends": ["ultracite"],
   "linter": {
     "rules": {
+      "correctness": {
+        "noUnusedPrivateClassMembers": "off"
+      },
       "style": {
-        "useFilenamingConvention": "off"
+        "useFilenamingConvention": "off",
+        "noEnum": "off",
+        "noParameterProperties": "off"
       }
     }
   }
