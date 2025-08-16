@@ -1,1 +1,3 @@
-// TODO implementar SignInModel
+export const useSignInModel = () => {
+  return {};
+};
