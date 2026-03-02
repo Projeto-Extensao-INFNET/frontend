@@ -1,55 +1,37 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const PORT = process.env.PORT ?? '5173';
+const BASE_URL = `http://localhost:${PORT}`;
+
 export default defineConfig({
-  testDir: './tests',
-testMatch: /.*\.(spec-e2e|test-e2e|e2e)\.tsx?/,
-  fullyParallel: false,
-  workers: process.env.CI ? 1 : undefined,
+  testDir: './e2e',
+  fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  // reporter: "html",
+  workers: process.env.CI ? 1 : undefined,
+  expect: { timeout: process.env.CI ? 15000 : 5000 },
+  reporter: 'html',
   use: {
-    baseURL: 'http://localhost:5173',
-  },
-  webServer: {
-    command: 'pnpm dev:test',
-    url: 'http://localhost:5173',
-    reuseExistingServer: !process.env.CI,
+    baseURL: BASE_URL,
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
   },
   projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-
-    // {
-    //   name: "firefox",
-    //   use: { ...devices["Desktop Firefox"] },
-    // },
-
-    // {
-    //   name: "webkit",
-    //   use: { ...devices["Desktop Safari"] },
-    // },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
   ],
+  // webServer: {
+  //   command: process.env.CI ? 'pnpm start' : 'pnpm dev',
+  //   url: BASE_URL,
+  //   reuseExistingServer: !process.env.CI,
+  //   timeout: 180 * 1000,
+  //   env: {
+  //     PORT,
+  //     ...(process.env.DATABASE_URL
+  //       ? { DATABASE_URL: process.env.DATABASE_URL }
+  //       : {}),
+  //   },
+  // },
 });
