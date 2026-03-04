@@ -1,12 +1,10 @@
-import { loadEnvFile } from 'node:process';
 import { z } from 'zod';
-
-loadEnvFile('.env');
 
 const envSchema = z.object({
   VITE_ENV: z
     .enum(['test', 'e2e', 'development', 'production'])
     .default('development'),
+  VITE_BASE_URL: z.url().startsWith('http://localhost:'),
 });
 
 const _env = envSchema.safeParse(import.meta.env as unknown);
