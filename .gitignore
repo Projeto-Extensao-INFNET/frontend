@@ -34,6 +34,9 @@ dist-ssr
 /playwright/.auth/
 
 # Environment
-.env.*
+.env
+.env.test
+.env.prod
+!.env.test.example
 !.env.example
 
