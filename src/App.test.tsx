@@ -1,5 +1,5 @@
 import { App } from './App';
-import { screen, render } from '@tests/custom-render';
+import { screen, render } from '@/__tests__/custom-render';
 
 const sut = () => {
   return render(<App />);
