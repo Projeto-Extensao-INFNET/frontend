@@ -1,8 +1,8 @@
-import axios, { type AxiosError, type AxiosInstance } from "axios";
-import type { HttpRequest, IHttpClient } from "./http-client.types";
-import { INTERNAL_SERVER_ERROR } from "@/shared/constants/errors";
+import axios, { type AxiosError, type AxiosInstance } from 'axios';
+import type { HttpRequest, IHttpClient } from './http-client.types';
+import { INTERNAL_SERVER_ERROR } from '@/shared/constants/errors';
 
-export const BASE_URL = process.env.BASE_URL; // TODO -> adicionar BASE_URL real
+export const BASE_URL = process.env.BASE_URL;
 
 export class HttpClient implements IHttpClient {
   private api: AxiosInstance; // instancia isolada do axios
@@ -13,6 +13,19 @@ export class HttpClient implements IHttpClient {
 
   static create() {
     return new HttpClient();
+  }
+
+  public setupInterceptors() {
+    this.api.interceptors.request.use(
+      (config) => {
+        const accessToken = localStorage.getItem('accessToken');
+
+        if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
+
+        return config;
+      },
+      (error) => Promise.reject(error),
+    );
   }
 
   // client  HTTP responsável pelas requisições ao backend
@@ -29,7 +42,7 @@ export class HttpClient implements IHttpClient {
       return data;
     } catch (err) {
       const error = err as AxiosError;
-      console.error("HTTP ERROR", {
+      console.error('HTTP ERROR', {
         message: error.message,
         code: error.code,
         response: error.response,
