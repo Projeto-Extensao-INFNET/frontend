@@ -1,3 +1,17 @@
+import { useGetUsers } from '@http/generated/api';
+
 export const App = () => {
-  return <h1 className="text-green-500">Hello World</h1>;
+  const { data } = useGetUsers();
+  console.log(data);
+
+  return (
+    <div>
+      <h1 className="text-gray-500">Users</h1>
+      <ul>
+        {data?.data?.map((user) => (
+          <li key={user.id}>{user.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
 };
