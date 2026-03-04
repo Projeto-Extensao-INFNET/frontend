@@ -10,6 +10,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "orval": "orval",
     "test": " vitest run --bail 1 ",
     "test:watch": " vitest watch --bail 1 ",
     "test:cov": " vitest run --coverage",
@@ -33,6 +34,7 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.3.0",
     "@playwright/test": "^1.58.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -56,5 +58,10 @@
     "vite": "^7.3.1",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^3.2.4"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }
