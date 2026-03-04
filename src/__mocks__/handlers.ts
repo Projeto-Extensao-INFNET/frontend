@@ -1,15 +1,3 @@
-import {
-  getAccountsMock,
-  getAppointmentsMock,
-  getAuthMock,
-  getHealthMock,
-  getProfessionalsMock,
-} from '../api/http/routes/index.msw';
+import { getAPIProjetoDeExtensãoMock } from '@/api/http/generated/api.msw';
 
-export const handlers = () => [
-  ...getProfessionalsMock(),
-  ...getAccountsMock(),
-  ...getAuthMock(),
-  ...getHealthMock(),
-  ...getAppointmentsMock(),
-];
+export const handlers = () => [...getAPIProjetoDeExtensãoMock()];
