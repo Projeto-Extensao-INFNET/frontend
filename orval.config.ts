@@ -5,10 +5,8 @@ export default defineConfig({
     input: 'http://localhost:3333/api-json',
     output: {
       namingConvention: 'kebab-case',
-      mode: 'tags-split',
-      target: 'src/api/http/routes/',
-      schemas: 'src/api/http/models/',
-      operationSchemas: 'src/api/http/models/params',
+      mode: 'split',
+      target: 'src/api/http/generated/api.ts',
       client: 'react-query',
       httpClient: 'axios',
       override: {
