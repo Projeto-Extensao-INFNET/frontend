@@ -22,16 +22,19 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
+      "@types/*": ["./src/@types/*"],
       "@shared/*": ["./src/shared/*"],
-      "@api/*": ["./src/api/*"],
       "@lib/*": ["./src/lib/*"],
+      "@api/*": ["./src/api/*"],
+      "@http/*": ["./src/api/http/*"],
       "@services/*": ["./src/domain/services/*"],
       "@presentation/*": ["./src/presentation/*"],
       "@styles/*": ["./src/styles/*"],
       "@assets/*": ["./src/assets/*"],
       "@helpers/*": ["./src/helpers/*"],
-      "@tests/*": ["src/tests/*"]
+      "@tests/*": ["src/__tests__/*"],
+      "@mocks/*": ["src/__mocks__/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "orval.config.ts"]
 }
