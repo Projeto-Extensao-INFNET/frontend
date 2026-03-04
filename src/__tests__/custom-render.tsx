@@ -1,11 +1,18 @@
-import type { ReactElement } from 'react';
+import type { FC, ReactElement, ReactNode } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const Wrapper: FC<{ children: ReactNode }> = ({ children }) => {
+  const client = new QueryClient();
+
+  return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
+};
 
 export function CustomRender(
   ui: ReactElement,
   options?: Omit<RenderOptions, 'wrapper'>,
 ) {
-  return render(ui, { ...options });
+  return render(ui, { ...options, wrapper: Wrapper });
 }
 
 export * from '@testing-library/react';
