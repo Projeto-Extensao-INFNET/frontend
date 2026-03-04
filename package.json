@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prepare": "lefthook install",
     "format": "prettier --write",
     "typecheck": "tsc --noEmit --skipLibCheck",
     "build": "tsc -b && vite build",
