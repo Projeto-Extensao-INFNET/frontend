@@ -2,11 +2,10 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { client } from '@lib/react-query.ts';
-import { BrowserRouter, Route, Routes } from 'react-router';
-import { ROUTES_PATH } from '@shared/constants/routes.ts';
+import { createRouter, RouterProvider } from '@tanstack/react-router';
 import { env } from '@shared/env';
 import '@styles/index.css';
-import { App } from './App.tsx';
+import { routeTree } from './routeTree.gen.ts';
 
 const enableMSW = async () => {
   if (env.VITE_ENV === 'test') {
@@ -16,15 +15,19 @@ const enableMSW = async () => {
   }
 };
 
+const router = createRouter({ routeTree });
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
+}
+
 enableMSW().then(() => {
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
       <QueryClientProvider client={client}>
-        <BrowserRouter>
-          <Routes>
-            <Route path={ROUTES_PATH.BASE} element={<App />} />
-          </Routes>
-        </BrowserRouter>
+        <RouterProvider router={router} />
       </QueryClientProvider>
     </StrictMode>,
   );
