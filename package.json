@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:test": "vite --port 5174 --mode test",
     "prepare": "lefthook install",
     "format": "prettier --write",
     "typecheck": "tsc --noEmit --skipLibCheck",
@@ -12,8 +13,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "orval": "orval",
-    "test": " vitest run --bail 1 ",
-    "test:watch": " vitest watch --bail 1 ",
+    "test": "vitest run --bail 1",
+    "test:watch": " vitest watch --bail 1",
     "test:cov": " vitest run --coverage",
     "test:e2e": " playwright test --reporter null",
     "test:e2e:ui": " playwright test --ui --reporter null",
