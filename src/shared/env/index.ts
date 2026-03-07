@@ -4,7 +4,7 @@ const envSchema = z.object({
   VITE_ENV: z
     .enum(['test', 'e2e', 'development', 'production'])
     .default('development'),
-  VITE_BASE_URL: z.url().startsWith('http://localhost:'),
+  VITE_BASE_URL: z.string(),
 });
 
 const _env = envSchema.safeParse(import.meta.env as unknown);
