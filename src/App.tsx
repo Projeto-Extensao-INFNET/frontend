@@ -1,7 +1,7 @@
-import { useGetUsers } from '@http/generated/api';
+import { useListUsers } from '@http/generated/api';
 
 export const App = () => {
-  const { data } = useGetUsers();
+  const { data } = useListUsers();
   console.log(data);
 
   return (
