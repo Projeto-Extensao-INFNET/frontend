@@ -94,12 +94,12 @@ export interface CreateAppointmentDto {
   isConfirmed: boolean;
 }
 
-export type GetUsersParams = {
+export type ListUsersParams = {
   limit?: number;
   page?: number;
 };
 
-export type GetUsers200DataItem = {
+export type ListUsers200DataItem = {
   id?: string;
   name?: string;
   email?: string;
@@ -109,16 +109,16 @@ export type GetUsers200DataItem = {
   document?: string;
 };
 
-export type GetUsers200Meta = {
+export type ListUsers200Meta = {
   total_items?: number;
   total_pages?: number;
   page?: number;
   limit?: number;
 };
 
-export type GetUsers200 = {
-  data?: GetUsers200DataItem[];
-  meta?: GetUsers200Meta;
+export type ListUsers200 = {
+  data?: ListUsers200DataItem[];
+  meta?: ListUsers200Meta;
 };
 
 export type ListProfessionalsParams = {

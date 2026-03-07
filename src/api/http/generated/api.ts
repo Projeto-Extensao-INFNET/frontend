@@ -27,11 +27,11 @@ import type {
   EditProfileDto,
   GetAppointment200Item,
   GetUserProfileResponse,
-  GetUsers200,
-  GetUsersParams,
   HealthCheck200,
   ListProfessionals200,
   ListProfessionalsParams,
+  ListUsers200,
+  ListUsersParams,
   SignInDto,
   SignUpDto,
   SignUpResponseDto,
@@ -204,7 +204,7 @@ export const useSignIn = <TError = void, TContext = unknown>(
 /**
  * @summary Get authenticated user profile
  */
-export const getProfile = (signal?: AbortSignal) => {
+export const userProfile = (signal?: AbortSignal) => {
   return orvalHttpClient<GetUserProfileResponse>({
     url: `/accounts/me`,
     method: 'GET',
@@ -212,51 +212,51 @@ export const getProfile = (signal?: AbortSignal) => {
   });
 };
 
-export const getGetProfileQueryKey = () => {
+export const getUserProfileQueryKey = () => {
   return [`/accounts/me`] as const;
 };
 
-export const getGetProfileQueryOptions = <
-  TData = Awaited<ReturnType<typeof getProfile>>,
+export const getUserProfileQueryOptions = <
+  TData = Awaited<ReturnType<typeof userProfile>>,
   TError = void | void,
 >(options?: {
   query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>
+    UseQueryOptions<Awaited<ReturnType<typeof userProfile>>, TError, TData>
   >;
 }) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetProfileQueryKey();
+  const queryKey = queryOptions?.queryKey ?? getUserProfileQueryKey();
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getProfile>>> = ({
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof userProfile>>> = ({
     signal,
-  }) => getProfile(signal);
+  }) => userProfile(signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getProfile>>,
+    Awaited<ReturnType<typeof userProfile>>,
     TError,
     TData
   > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type GetProfileQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getProfile>>
+export type UserProfileQueryResult = NonNullable<
+  Awaited<ReturnType<typeof userProfile>>
 >;
-export type GetProfileQueryError = void | void;
+export type UserProfileQueryError = void | void;
 
-export function useGetProfile<
-  TData = Awaited<ReturnType<typeof getProfile>>,
+export function useUserProfile<
+  TData = Awaited<ReturnType<typeof userProfile>>,
   TError = void | void,
 >(
   options: {
     query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof userProfile>>, TError, TData>
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getProfile>>,
+          Awaited<ReturnType<typeof userProfile>>,
           TError,
-          Awaited<ReturnType<typeof getProfile>>
+          Awaited<ReturnType<typeof userProfile>>
         >,
         'initialData'
       >;
@@ -265,19 +265,19 @@ export function useGetProfile<
 ): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useGetProfile<
-  TData = Awaited<ReturnType<typeof getProfile>>,
+export function useUserProfile<
+  TData = Awaited<ReturnType<typeof userProfile>>,
   TError = void | void,
 >(
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof userProfile>>, TError, TData>
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getProfile>>,
+          Awaited<ReturnType<typeof userProfile>>,
           TError,
-          Awaited<ReturnType<typeof getProfile>>
+          Awaited<ReturnType<typeof userProfile>>
         >,
         'initialData'
       >;
@@ -286,13 +286,13 @@ export function useGetProfile<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useGetProfile<
-  TData = Awaited<ReturnType<typeof getProfile>>,
+export function useUserProfile<
+  TData = Awaited<ReturnType<typeof userProfile>>,
   TError = void | void,
 >(
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof userProfile>>, TError, TData>
     >;
   },
   queryClient?: QueryClient,
@@ -303,20 +303,20 @@ export function useGetProfile<
  * @summary Get authenticated user profile
  */
 
-export function useGetProfile<
-  TData = Awaited<ReturnType<typeof getProfile>>,
+export function useUserProfile<
+  TData = Awaited<ReturnType<typeof userProfile>>,
   TError = void | void,
 >(
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getProfile>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof userProfile>>, TError, TData>
     >;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getGetProfileQueryOptions(options);
+  const queryOptions = getUserProfileQueryOptions(options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
@@ -482,8 +482,8 @@ export const useDeleteProfile = <TError = void, TContext = unknown>(
 /**
  * @summary Get all users (paginated)
  */
-export const getUsers = (params?: GetUsersParams, signal?: AbortSignal) => {
-  return orvalHttpClient<GetUsers200>({
+export const listUsers = (params?: ListUsersParams, signal?: AbortSignal) => {
+  return orvalHttpClient<ListUsers200>({
     url: `/accounts/users`,
     method: 'GET',
     params,
@@ -491,55 +491,55 @@ export const getUsers = (params?: GetUsersParams, signal?: AbortSignal) => {
   });
 };
 
-export const getGetUsersQueryKey = (params?: GetUsersParams) => {
+export const getListUsersQueryKey = (params?: ListUsersParams) => {
   return [`/accounts/users`, ...(params ? [params] : [])] as const;
 };
 
-export const getGetUsersQueryOptions = <
-  TData = Awaited<ReturnType<typeof getUsers>>,
-  TError = unknown,
+export const getListUsersQueryOptions = <
+  TData = Awaited<ReturnType<typeof listUsers>>,
+  TError = void,
 >(
-  params?: GetUsersParams,
+  params?: ListUsersParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof listUsers>>, TError, TData>
     >;
   },
 ) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetUsersQueryKey(params);
+  const queryKey = queryOptions?.queryKey ?? getListUsersQueryKey(params);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getUsers>>> = ({
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listUsers>>> = ({
     signal,
-  }) => getUsers(params, signal);
+  }) => listUsers(params, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getUsers>>,
+    Awaited<ReturnType<typeof listUsers>>,
     TError,
     TData
   > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type GetUsersQueryResult = NonNullable<
-  Awaited<ReturnType<typeof getUsers>>
+export type ListUsersQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listUsers>>
 >;
-export type GetUsersQueryError = unknown;
+export type ListUsersQueryError = void;
 
-export function useGetUsers<
-  TData = Awaited<ReturnType<typeof getUsers>>,
-  TError = unknown,
+export function useListUsers<
+  TData = Awaited<ReturnType<typeof listUsers>>,
+  TError = void,
 >(
-  params: undefined | GetUsersParams,
+  params: undefined | ListUsersParams,
   options: {
     query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof listUsers>>, TError, TData>
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getUsers>>,
+          Awaited<ReturnType<typeof listUsers>>,
           TError,
-          Awaited<ReturnType<typeof getUsers>>
+          Awaited<ReturnType<typeof listUsers>>
         >,
         'initialData'
       >;
@@ -548,20 +548,20 @@ export function useGetUsers<
 ): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useGetUsers<
-  TData = Awaited<ReturnType<typeof getUsers>>,
-  TError = unknown,
+export function useListUsers<
+  TData = Awaited<ReturnType<typeof listUsers>>,
+  TError = void,
 >(
-  params?: GetUsersParams,
+  params?: ListUsersParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof listUsers>>, TError, TData>
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getUsers>>,
+          Awaited<ReturnType<typeof listUsers>>,
           TError,
-          Awaited<ReturnType<typeof getUsers>>
+          Awaited<ReturnType<typeof listUsers>>
         >,
         'initialData'
       >;
@@ -570,14 +570,14 @@ export function useGetUsers<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useGetUsers<
-  TData = Awaited<ReturnType<typeof getUsers>>,
-  TError = unknown,
+export function useListUsers<
+  TData = Awaited<ReturnType<typeof listUsers>>,
+  TError = void,
 >(
-  params?: GetUsersParams,
+  params?: ListUsersParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof listUsers>>, TError, TData>
     >;
   },
   queryClient?: QueryClient,
@@ -588,21 +588,21 @@ export function useGetUsers<
  * @summary Get all users (paginated)
  */
 
-export function useGetUsers<
-  TData = Awaited<ReturnType<typeof getUsers>>,
-  TError = unknown,
+export function useListUsers<
+  TData = Awaited<ReturnType<typeof listUsers>>,
+  TError = void,
 >(
-  params?: GetUsersParams,
+  params?: ListUsersParams,
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof getUsers>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof listUsers>>, TError, TData>
     >;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getGetUsersQueryOptions(params, options);
+  const queryOptions = getListUsersQueryOptions(params, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,

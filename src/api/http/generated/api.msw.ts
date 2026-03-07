@@ -14,9 +14,9 @@ import type {
   AccessTokenResponse,
   GetAppointment200Item,
   GetUserProfileResponse,
-  GetUsers200,
   HealthCheck200,
   ListProfessionals200,
+  ListUsers200,
   SignUpResponseDto,
   UpdateAppointment200,
 } from './api.schemas';
@@ -67,7 +67,7 @@ export const getSignInResponseMock201 = (
   ...overrideResponse,
 });
 
-export const getGetProfileResponseMock = (
+export const getUserProfileResponseMock = (
   overrideResponse: Partial<GetUserProfileResponse> = {},
 ): GetUserProfileResponse => ({
   id: faker.string.uuid(),
@@ -80,7 +80,7 @@ export const getGetProfileResponseMock = (
   ...overrideResponse,
 });
 
-export const getGetProfileResponseMock200 = (
+export const getUserProfileResponseMock200 = (
   overrideResponse: Partial<GetUserProfileResponse> = {},
 ): GetUserProfileResponse => ({
   id: faker.string.uuid(),
@@ -119,9 +119,9 @@ export const getEditProfileResponseMock200 = (
   ...overrideResponse,
 });
 
-export const getGetUsersResponseMock = (
-  overrideResponse: Partial<GetUsers200> = {},
-): GetUsers200 => ({
+export const getListUsersResponseMock = (
+  overrideResponse: Partial<ListUsers200> = {},
+): ListUsers200 => ({
   data: faker.helpers.arrayElement([
     Array.from(
       { length: faker.number.int({ min: 1, max: 10 }) },
@@ -192,9 +192,9 @@ export const getGetUsersResponseMock = (
   ...overrideResponse,
 });
 
-export const getGetUsersResponseMock200 = (
-  overrideResponse: Partial<GetUsers200> = {},
-): GetUsers200 => ({
+export const getListUsersResponseMock200 = (
+  overrideResponse: Partial<ListUsers200> = {},
+): ListUsers200 => ({
   data: faker.helpers.arrayElement([
     Array.from(
       { length: faker.number.int({ min: 1, max: 10 }) },
@@ -772,7 +772,7 @@ export const getSignInMockHandler401 = (
   );
 };
 
-export const getGetProfileMockHandler = (
+export const getUserProfileMockHandler = (
   overrideResponse?:
     | GetUserProfileResponse
     | ((
@@ -791,7 +791,7 @@ export const getGetProfileMockHandler = (
             ? typeof overrideResponse === 'function'
               ? await overrideResponse(info)
               : overrideResponse
-            : getGetProfileResponseMock(),
+            : getUserProfileResponseMock(),
         ),
         { status: 200, headers: { 'Content-Type': 'application/json' } },
       );
@@ -800,7 +800,7 @@ export const getGetProfileMockHandler = (
   );
 };
 
-export const getGetProfileMockHandler200 = (
+export const getUserProfileMockHandler200 = (
   overrideResponse?:
     | GetUserProfileResponse
     | ((
@@ -819,7 +819,7 @@ export const getGetProfileMockHandler200 = (
             ? typeof overrideResponse === 'function'
               ? await overrideResponse(info)
               : overrideResponse
-            : getGetProfileResponseMock200(),
+            : getUserProfileResponseMock200(),
         ),
         { status: 200, headers: { 'Content-Type': 'application/json' } },
       );
@@ -828,7 +828,7 @@ export const getGetProfileMockHandler200 = (
   );
 };
 
-export const getGetProfileMockHandler401 = (
+export const getUserProfileMockHandler401 = (
   overrideResponse?:
     | void
     | ((
@@ -849,7 +849,7 @@ export const getGetProfileMockHandler401 = (
   );
 };
 
-export const getGetProfileMockHandler404 = (
+export const getUserProfileMockHandler404 = (
   overrideResponse?:
     | void
     | ((
@@ -1010,12 +1010,12 @@ export const getDeleteProfileMockHandler401 = (
   );
 };
 
-export const getGetUsersMockHandler = (
+export const getListUsersMockHandler = (
   overrideResponse?:
-    | GetUsers200
+    | ListUsers200
     | ((
         info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<GetUsers200> | GetUsers200),
+      ) => Promise<ListUsers200> | ListUsers200),
   options?: RequestHandlerOptions,
 ) => {
   return http.get(
@@ -1029,7 +1029,7 @@ export const getGetUsersMockHandler = (
             ? typeof overrideResponse === 'function'
               ? await overrideResponse(info)
               : overrideResponse
-            : getGetUsersResponseMock(),
+            : getListUsersResponseMock(),
         ),
         { status: 200, headers: { 'Content-Type': 'application/json' } },
       );
@@ -1038,12 +1038,12 @@ export const getGetUsersMockHandler = (
   );
 };
 
-export const getGetUsersMockHandler200 = (
+export const getListUsersMockHandler200 = (
   overrideResponse?:
-    | GetUsers200
+    | ListUsers200
     | ((
         info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<GetUsers200> | GetUsers200),
+      ) => Promise<ListUsers200> | ListUsers200),
   options?: RequestHandlerOptions,
 ) => {
   return http.get(
@@ -1057,10 +1057,31 @@ export const getGetUsersMockHandler200 = (
             ? typeof overrideResponse === 'function'
               ? await overrideResponse(info)
               : overrideResponse
-            : getGetUsersResponseMock200(),
+            : getListUsersResponseMock200(),
         ),
         { status: 200, headers: { 'Content-Type': 'application/json' } },
       );
+    },
+    options,
+  );
+};
+
+export const getListUsersMockHandler404 = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    'http://localhost:3333/accounts/users',
+    async (info) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+      return new HttpResponse(null, { status: 404 });
     },
     options,
   );
@@ -1523,10 +1544,10 @@ export const getUploadAvatarMockHandler422 = (
 export const getAPIProjetoDeExtensãoMock = () => [
   getSignUpMockHandler(),
   getSignInMockHandler(),
-  getGetProfileMockHandler(),
+  getUserProfileMockHandler(),
   getEditProfileMockHandler(),
   getDeleteProfileMockHandler(),
-  getGetUsersMockHandler(),
+  getListUsersMockHandler(),
   getListProfessionalsMockHandler(),
   getGetAppointmentMockHandler(),
   getUpdateAppointmentMockHandler(),
