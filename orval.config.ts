@@ -11,7 +11,7 @@ export default defineConfig({
       httpClient: 'axios',
       override: {
         mutator: {
-          path: 'src/api/orval-http-client.ts',
+          path: 'src/api/http-client.ts',
           name: 'orvalHttpClient',
         },
       },
@@ -20,7 +20,6 @@ export default defineConfig({
       mock: {
         type: 'msw',
         delay: 1000,
-        baseUrl: 'http://localhost:3333',
         useExamples: false,
         generateEachHttpStatus: true,
         indexMockFiles: true,
