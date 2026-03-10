@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"npm:dev:vite\" \"npm:dev:orval\"",
+    "dev:test": "concurrently \"npm:dev:vite:test\" \"npm:dev:orval\"",
     "dev:vite": "vite",
-    "dev:test": "vite --port 5174 --mode test",
+    "dev:vite:test": "vite --port 5174 --mode test",
     "dev:orval": "orval -w",
     "orval:gen": "orval",
     "prepare": "lefthook install",
