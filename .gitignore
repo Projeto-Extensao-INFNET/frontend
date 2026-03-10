@@ -35,6 +35,7 @@ dist-ssr
 
 # Environment
 .env
+.env.local
 .env.test
 .env.prod
 !.env.test.example
