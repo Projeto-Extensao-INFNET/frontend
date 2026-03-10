@@ -1,18 +1,25 @@
-import axios, { type AxiosError, type AxiosInstance } from 'axios';
-import type { HttpRequest, IHttpClient } from './http-client.types';
+import {
+  type HttpMethod,
+  type HttpRequest,
+  type IHttpClient,
+} from './http-client.types';
+import axios, {
+  type AxiosError,
+  type AxiosInstance,
+  type AxiosRequestConfig,
+} from 'axios';
 import { INTERNAL_SERVER_ERROR } from '@/shared/constants/errors';
+import { env } from '@/shared/env';
 
-export const BASE_URL = process.env.BASE_URL;
+const BASE_URL = env.VITE_BASE_URL;
 
-export class HttpClient implements IHttpClient {
-  private api: AxiosInstance; // instancia isolada do axios
+// HTTP client customizado
+export class httpClient implements IHttpClient {
+  public api: AxiosInstance;
 
-  private constructor() {
+  public constructor() {
     this.api = axios.create({ baseURL: BASE_URL });
-  }
-
-  static create() {
-    return new HttpClient();
+    this.setupInterceptors();
   }
 
   public setupInterceptors() {
@@ -28,13 +35,12 @@ export class HttpClient implements IHttpClient {
     );
   }
 
-  // client  HTTP responsável pelas requisições ao backend
   async request<TResponse, TBody = unknown>(props: HttpRequest<TBody>) {
     const { endpoint, method, body, headers } = props;
 
     try {
       const { data } = await this.api.request<TResponse>({
-        url: endpoint, // BASE_URL já vem por padrão (pelo this.api), passa apenas os endpoints
+        url: endpoint,
         method,
         data: body,
         headers,
@@ -54,3 +60,22 @@ export class HttpClient implements IHttpClient {
     }
   }
 }
+
+// Instância única para reutilização
+const client = new httpClient();
+
+// Função para o Orval usar o HTTP client customizado.
+export const orvalHttpClient = async <TResponse, TBody = unknown>(
+  config: AxiosRequestConfig,
+): Promise<TResponse> => {
+  const method = (config.method ?? 'get').toLowerCase() as HttpMethod;
+
+  const request: HttpRequest<TBody> = {
+    endpoint: String(config.url ?? env.VITE_BASE_URL),
+    method,
+    body: config.data as TBody,
+    headers: config.headers as Record<string, string> | undefined,
+  };
+
+  return client.request<TResponse, TBody>(request);
+};
