@@ -66,6 +66,10 @@ export interface AccessTokenResponse {
   accessToken: string;
 }
 
+export interface LogoutResponse {
+  message: string;
+}
+
 export interface GetUserProfileResponse {
   id: string;
   name: string;
@@ -173,7 +177,7 @@ export type HealthCheck200 = {
   timestamp?: string;
 };
 
-export type UploadAvatarBody = {
+export type UploadUserAvatarBody = {
   /** Avatar image file */
   avatar: Blob;
 };

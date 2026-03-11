@@ -17,6 +17,7 @@ import type {
   HealthCheck200,
   ListProfessionals200,
   ListUsers200,
+  LogoutResponse,
   SignUpResponseDto,
   UpdateAppointment200,
 } from './api.schemas';
@@ -67,7 +68,35 @@ export const getSignInResponseMock201 = (
   ...overrideResponse,
 });
 
-export const getUserProfileResponseMock = (
+export const getRefreshTokenResponseMock = (
+  overrideResponse: Partial<Extract<AccessTokenResponse, object>> = {},
+): AccessTokenResponse => ({
+  accessToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getRefreshTokenResponseMock201 = (
+  overrideResponse: Partial<Extract<AccessTokenResponse, object>> = {},
+): AccessTokenResponse => ({
+  accessToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getLogoutResponseMock = (
+  overrideResponse: Partial<Extract<LogoutResponse, object>> = {},
+): LogoutResponse => ({
+  message: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getLogoutResponseMock201 = (
+  overrideResponse: Partial<Extract<LogoutResponse, object>> = {},
+): LogoutResponse => ({
+  message: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getGetUserProfileResponseMock = (
   overrideResponse: Partial<Extract<GetUserProfileResponse, object>> = {},
 ): GetUserProfileResponse => ({
   id: faker.string.uuid(),
@@ -80,7 +109,7 @@ export const getUserProfileResponseMock = (
   ...overrideResponse,
 });
 
-export const getUserProfileResponseMock200 = (
+export const getGetUserProfileResponseMock200 = (
   overrideResponse: Partial<Extract<GetUserProfileResponse, object>> = {},
 ): GetUserProfileResponse => ({
   id: faker.string.uuid(),
@@ -93,7 +122,7 @@ export const getUserProfileResponseMock200 = (
   ...overrideResponse,
 });
 
-export const getEditProfileResponseMock = (
+export const getUpdateUserProfileResponseMock = (
   overrideResponse: Partial<Extract<GetUserProfileResponse, object>> = {},
 ): GetUserProfileResponse => ({
   id: faker.string.uuid(),
@@ -106,7 +135,7 @@ export const getEditProfileResponseMock = (
   ...overrideResponse,
 });
 
-export const getEditProfileResponseMock200 = (
+export const getUpdateUserProfileResponseMock200 = (
   overrideResponse: Partial<Extract<GetUserProfileResponse, object>> = {},
 ): GetUserProfileResponse => ({
   id: faker.string.uuid(),
@@ -703,7 +732,155 @@ export const getSignInMockHandler401 = (
   );
 };
 
-export const getUserProfileMockHandler = (
+export const getRefreshTokenMockHandler = (
+  overrideResponse?:
+    | AccessTokenResponse
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<AccessTokenResponse> | AccessTokenResponse),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/auth/refresh',
+    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+      await delay(1000);
+
+      return HttpResponse.json(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === 'function'
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getRefreshTokenResponseMock(),
+        { status: 201 },
+      );
+    },
+    options,
+  );
+};
+
+export const getRefreshTokenMockHandler201 = (
+  overrideResponse?:
+    | AccessTokenResponse
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<AccessTokenResponse> | AccessTokenResponse),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/auth/refresh',
+    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+      await delay(1000);
+
+      return HttpResponse.json(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === 'function'
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getRefreshTokenResponseMock201(),
+        { status: 201 },
+      );
+    },
+    options,
+  );
+};
+
+export const getRefreshTokenMockHandler401 = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/auth/refresh',
+    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 401 });
+    },
+    options,
+  );
+};
+
+export const getLogoutMockHandler = (
+  overrideResponse?:
+    | LogoutResponse
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<LogoutResponse> | LogoutResponse),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/auth/logout',
+    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+      await delay(1000);
+
+      return HttpResponse.json(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === 'function'
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getLogoutResponseMock(),
+        { status: 201 },
+      );
+    },
+    options,
+  );
+};
+
+export const getLogoutMockHandler201 = (
+  overrideResponse?:
+    | LogoutResponse
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<LogoutResponse> | LogoutResponse),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/auth/logout',
+    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+      await delay(1000);
+
+      return HttpResponse.json(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === 'function'
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getLogoutResponseMock201(),
+        { status: 201 },
+      );
+    },
+    options,
+  );
+};
+
+export const getLogoutMockHandler401 = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/auth/logout',
+    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 401 });
+    },
+    options,
+  );
+};
+
+export const getGetUserProfileMockHandler = (
   overrideResponse?:
     | GetUserProfileResponse
     | ((
@@ -721,7 +898,7 @@ export const getUserProfileMockHandler = (
           ? typeof overrideResponse === 'function'
             ? await overrideResponse(info)
             : overrideResponse
-          : getUserProfileResponseMock(),
+          : getGetUserProfileResponseMock(),
         { status: 200 },
       );
     },
@@ -729,7 +906,7 @@ export const getUserProfileMockHandler = (
   );
 };
 
-export const getUserProfileMockHandler200 = (
+export const getGetUserProfileMockHandler200 = (
   overrideResponse?:
     | GetUserProfileResponse
     | ((
@@ -747,7 +924,7 @@ export const getUserProfileMockHandler200 = (
           ? typeof overrideResponse === 'function'
             ? await overrideResponse(info)
             : overrideResponse
-          : getUserProfileResponseMock200(),
+          : getGetUserProfileResponseMock200(),
         { status: 200 },
       );
     },
@@ -755,7 +932,7 @@ export const getUserProfileMockHandler200 = (
   );
 };
 
-export const getUserProfileMockHandler401 = (
+export const getGetUserProfileMockHandler401 = (
   overrideResponse?:
     | void
     | ((
@@ -777,7 +954,7 @@ export const getUserProfileMockHandler401 = (
   );
 };
 
-export const getUserProfileMockHandler404 = (
+export const getGetUserProfileMockHandler404 = (
   overrideResponse?:
     | void
     | ((
@@ -799,7 +976,7 @@ export const getUserProfileMockHandler404 = (
   );
 };
 
-export const getEditProfileMockHandler = (
+export const getUpdateUserProfileMockHandler = (
   overrideResponse?:
     | GetUserProfileResponse
     | ((
@@ -817,7 +994,7 @@ export const getEditProfileMockHandler = (
           ? typeof overrideResponse === 'function'
             ? await overrideResponse(info)
             : overrideResponse
-          : getEditProfileResponseMock(),
+          : getUpdateUserProfileResponseMock(),
         { status: 200 },
       );
     },
@@ -825,7 +1002,7 @@ export const getEditProfileMockHandler = (
   );
 };
 
-export const getEditProfileMockHandler200 = (
+export const getUpdateUserProfileMockHandler200 = (
   overrideResponse?:
     | GetUserProfileResponse
     | ((
@@ -843,7 +1020,7 @@ export const getEditProfileMockHandler200 = (
           ? typeof overrideResponse === 'function'
             ? await overrideResponse(info)
             : overrideResponse
-          : getEditProfileResponseMock200(),
+          : getUpdateUserProfileResponseMock200(),
         { status: 200 },
       );
     },
@@ -851,7 +1028,7 @@ export const getEditProfileMockHandler200 = (
   );
 };
 
-export const getEditProfileMockHandler401 = (
+export const getUpdateUserProfileMockHandler401 = (
   overrideResponse?:
     | void
     | ((
@@ -873,7 +1050,7 @@ export const getEditProfileMockHandler401 = (
   );
 };
 
-export const getDeleteProfileMockHandler = (
+export const getDeleteUserProfileMockHandler = (
   overrideResponse?:
     | void
     | ((
@@ -895,7 +1072,7 @@ export const getDeleteProfileMockHandler = (
   );
 };
 
-export const getDeleteProfileMockHandler204 = (
+export const getDeleteUserProfileMockHandler204 = (
   overrideResponse?:
     | void
     | ((
@@ -917,7 +1094,7 @@ export const getDeleteProfileMockHandler204 = (
   );
 };
 
-export const getDeleteProfileMockHandler401 = (
+export const getDeleteUserProfileMockHandler401 = (
   overrideResponse?:
     | void
     | ((
@@ -986,6 +1163,28 @@ export const getListUsersMockHandler200 = (
           : getListUsersResponseMock200(),
         { status: 200 },
       );
+    },
+    options,
+  );
+};
+
+export const getListUsersMockHandler401 = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/accounts/users',
+    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 401 });
     },
     options,
   );
@@ -1060,6 +1259,28 @@ export const getListProfessionalsMockHandler200 = (
           : getListProfessionalsResponseMock200(),
         { status: 200 },
       );
+    },
+    options,
+  );
+};
+
+export const getListProfessionalsMockHandler401 = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/professionals',
+    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 401 });
     },
     options,
   );
@@ -1375,7 +1596,7 @@ export const getHealthCheckMockHandler200 = (
   );
 };
 
-export const getUploadAvatarMockHandler = (
+export const getUploadUserAvatarMockHandler = (
   overrideResponse?:
     | void
     | ((
@@ -1397,7 +1618,7 @@ export const getUploadAvatarMockHandler = (
   );
 };
 
-export const getUploadAvatarMockHandler201 = (
+export const getUploadUserAvatarMockHandler201 = (
   overrideResponse?:
     | void
     | ((
@@ -1419,7 +1640,29 @@ export const getUploadAvatarMockHandler201 = (
   );
 };
 
-export const getUploadAvatarMockHandler404 = (
+export const getUploadUserAvatarMockHandler401 = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/accounts/me/avatar',
+    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 401 });
+    },
+    options,
+  );
+};
+
+export const getUploadUserAvatarMockHandler404 = (
   overrideResponse?:
     | void
     | ((
@@ -1441,7 +1684,7 @@ export const getUploadAvatarMockHandler404 = (
   );
 };
 
-export const getUploadAvatarMockHandler422 = (
+export const getUploadUserAvatarMockHandler422 = (
   overrideResponse?:
     | void
     | ((
@@ -1465,9 +1708,11 @@ export const getUploadAvatarMockHandler422 = (
 export const getAPIProjetoDeExtensaoMock = () => [
   getSignUpMockHandler(),
   getSignInMockHandler(),
-  getUserProfileMockHandler(),
-  getEditProfileMockHandler(),
-  getDeleteProfileMockHandler(),
+  getRefreshTokenMockHandler(),
+  getLogoutMockHandler(),
+  getGetUserProfileMockHandler(),
+  getUpdateUserProfileMockHandler(),
+  getDeleteUserProfileMockHandler(),
   getListUsersMockHandler(),
   getListProfessionalsMockHandler(),
   getGetAppointmentMockHandler(),
@@ -1475,5 +1720,5 @@ export const getAPIProjetoDeExtensaoMock = () => [
   getCancelAppointmentMockHandler(),
   getCreateAppointmentMockHandler(),
   getHealthCheckMockHandler(),
-  getUploadAvatarMockHandler(),
+  getUploadUserAvatarMockHandler(),
 ];

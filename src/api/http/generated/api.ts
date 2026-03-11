@@ -32,11 +32,12 @@ import type {
   ListProfessionalsParams,
   ListUsers200,
   ListUsersParams,
+  LogoutResponse,
   SignInDto,
   SignUpDto,
   SignUpResponseDto,
   UpdateAppointment200,
-  UploadAvatarBody,
+  UploadUserAvatarBody,
 } from './api.schemas';
 
 import { orvalHttpClient } from '../../http-client';
@@ -198,9 +199,159 @@ export const useSignIn = <TError = void, TContext = unknown>(
 };
 
 /**
+ * Reads the refresh token from the HttpOnly cookie, validates it, and returns a new access token. A new refresh token is also set as a cookie.
+ * @summary Refresh access token using the refresh token cookie
+ */
+export const refreshToken = (signal?: AbortSignal) => {
+  return orvalHttpClient<AccessTokenResponse>({
+    url: `/auth/refresh`,
+    method: 'POST',
+    signal,
+  });
+};
+
+export const getRefreshTokenMutationOptions = <
+  TError = void,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof refreshToken>>,
+    TError,
+    void,
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof refreshToken>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ['refreshToken'];
+  const { mutation: mutationOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof refreshToken>>,
+    void
+  > = () => {
+    return refreshToken();
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RefreshTokenMutationResult = NonNullable<
+  Awaited<ReturnType<typeof refreshToken>>
+>;
+
+export type RefreshTokenMutationError = void;
+
+/**
+ * @summary Refresh access token using the refresh token cookie
+ */
+export const useRefreshToken = <TError = void, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof refreshToken>>,
+      TError,
+      void,
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof refreshToken>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getRefreshTokenMutationOptions(options), queryClient);
+};
+
+/**
+ * Invalidates the refresh token in the database and clears the refresh token cookie.
+ * @summary Logout the current user
+ */
+export const logout = (signal?: AbortSignal) => {
+  return orvalHttpClient<LogoutResponse>({
+    url: `/auth/logout`,
+    method: 'POST',
+    signal,
+  });
+};
+
+export const getLogoutMutationOptions = <
+  TError = void,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof logout>>,
+    TError,
+    void,
+    TContext
+  >;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof logout>>,
+  TError,
+  void,
+  TContext
+> => {
+  const mutationKey = ['logout'];
+  const { mutation: mutationOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey } };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof logout>>,
+    void
+  > = () => {
+    return logout();
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type LogoutMutationResult = NonNullable<
+  Awaited<ReturnType<typeof logout>>
+>;
+
+export type LogoutMutationError = void;
+
+/**
+ * @summary Logout the current user
+ */
+export const useLogout = <TError = void, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof logout>>,
+      TError,
+      void,
+      TContext
+    >;
+  },
+  queryClient?: QueryClient,
+): UseMutationResult<
+  Awaited<ReturnType<typeof logout>>,
+  TError,
+  void,
+  TContext
+> => {
+  return useMutation(getLogoutMutationOptions(options), queryClient);
+};
+
+/**
  * @summary Get authenticated user profile
  */
-export const userProfile = (signal?: AbortSignal) => {
+export const getUserProfile = (signal?: AbortSignal) => {
   return orvalHttpClient<GetUserProfileResponse>({
     url: `/accounts/me`,
     method: 'GET',
@@ -208,51 +359,51 @@ export const userProfile = (signal?: AbortSignal) => {
   });
 };
 
-export const getUserProfileQueryKey = () => {
+export const getGetUserProfileQueryKey = () => {
   return [`/accounts/me`] as const;
 };
 
-export const getUserProfileQueryOptions = <
-  TData = Awaited<ReturnType<typeof userProfile>>,
+export const getGetUserProfileQueryOptions = <
+  TData = Awaited<ReturnType<typeof getUserProfile>>,
   TError = void,
 >(options?: {
   query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof userProfile>>, TError, TData>
+    UseQueryOptions<Awaited<ReturnType<typeof getUserProfile>>, TError, TData>
   >;
 }) => {
   const { query: queryOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getUserProfileQueryKey();
+  const queryKey = queryOptions?.queryKey ?? getGetUserProfileQueryKey();
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof userProfile>>> = ({
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getUserProfile>>> = ({
     signal,
-  }) => userProfile(signal);
+  }) => getUserProfile(signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof userProfile>>,
+    Awaited<ReturnType<typeof getUserProfile>>,
     TError,
     TData
   > & { queryKey: DataTag<QueryKey, TData, TError> };
 };
 
-export type UserProfileQueryResult = NonNullable<
-  Awaited<ReturnType<typeof userProfile>>
+export type GetUserProfileQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getUserProfile>>
 >;
-export type UserProfileQueryError = void;
+export type GetUserProfileQueryError = void;
 
-export function useUserProfile<
-  TData = Awaited<ReturnType<typeof userProfile>>,
+export function useGetUserProfile<
+  TData = Awaited<ReturnType<typeof getUserProfile>>,
   TError = void,
 >(
   options: {
     query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof userProfile>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof getUserProfile>>, TError, TData>
     > &
       Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof userProfile>>,
+          Awaited<ReturnType<typeof getUserProfile>>,
           TError,
-          Awaited<ReturnType<typeof userProfile>>
+          Awaited<ReturnType<typeof getUserProfile>>
         >,
         'initialData'
       >;
@@ -261,19 +412,19 @@ export function useUserProfile<
 ): DefinedUseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useUserProfile<
-  TData = Awaited<ReturnType<typeof userProfile>>,
+export function useGetUserProfile<
+  TData = Awaited<ReturnType<typeof getUserProfile>>,
   TError = void,
 >(
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof userProfile>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof getUserProfile>>, TError, TData>
     > &
       Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof userProfile>>,
+          Awaited<ReturnType<typeof getUserProfile>>,
           TError,
-          Awaited<ReturnType<typeof userProfile>>
+          Awaited<ReturnType<typeof getUserProfile>>
         >,
         'initialData'
       >;
@@ -282,13 +433,13 @@ export function useUserProfile<
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 };
-export function useUserProfile<
-  TData = Awaited<ReturnType<typeof userProfile>>,
+export function useGetUserProfile<
+  TData = Awaited<ReturnType<typeof getUserProfile>>,
   TError = void,
 >(
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof userProfile>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof getUserProfile>>, TError, TData>
     >;
   },
   queryClient?: QueryClient,
@@ -299,20 +450,20 @@ export function useUserProfile<
  * @summary Get authenticated user profile
  */
 
-export function useUserProfile<
-  TData = Awaited<ReturnType<typeof userProfile>>,
+export function useGetUserProfile<
+  TData = Awaited<ReturnType<typeof getUserProfile>>,
   TError = void,
 >(
   options?: {
     query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof userProfile>>, TError, TData>
+      UseQueryOptions<Awaited<ReturnType<typeof getUserProfile>>, TError, TData>
     >;
   },
   queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
   queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getUserProfileQueryOptions(options);
+  const queryOptions = getGetUserProfileQueryOptions(options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
@@ -325,7 +476,7 @@ export function useUserProfile<
 /**
  * @summary Edit authenticated user profile
  */
-export const editProfile = (
+export const updateUserProfile = (
   editProfileDto: EditProfileDto,
   signal?: AbortSignal,
 ) => {
@@ -338,23 +489,23 @@ export const editProfile = (
   });
 };
 
-export const getEditProfileMutationOptions = <
+export const getUpdateUserProfileMutationOptions = <
   TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof editProfile>>,
+    Awaited<ReturnType<typeof updateUserProfile>>,
     TError,
     { data: EditProfileDto },
     TContext
   >;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof editProfile>>,
+  Awaited<ReturnType<typeof updateUserProfile>>,
   TError,
   { data: EditProfileDto },
   TContext
 > => {
-  const mutationKey = ['editProfile'];
+  const mutationKey = ['updateUserProfile'];
   const { mutation: mutationOptions } = options
     ? options.mutation &&
       'mutationKey' in options.mutation &&
@@ -364,30 +515,30 @@ export const getEditProfileMutationOptions = <
     : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof editProfile>>,
+    Awaited<ReturnType<typeof updateUserProfile>>,
     { data: EditProfileDto }
   > = (props) => {
     const { data } = props ?? {};
 
-    return editProfile(data);
+    return updateUserProfile(data);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type EditProfileMutationResult = NonNullable<
-  Awaited<ReturnType<typeof editProfile>>
+export type UpdateUserProfileMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateUserProfile>>
 >;
-export type EditProfileMutationBody = EditProfileDto;
-export type EditProfileMutationError = void;
+export type UpdateUserProfileMutationBody = EditProfileDto;
+export type UpdateUserProfileMutationError = void;
 
 /**
  * @summary Edit authenticated user profile
  */
-export const useEditProfile = <TError = void, TContext = unknown>(
+export const useUpdateUserProfile = <TError = void, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof editProfile>>,
+      Awaited<ReturnType<typeof updateUserProfile>>,
       TError,
       { data: EditProfileDto },
       TContext
@@ -395,18 +546,18 @@ export const useEditProfile = <TError = void, TContext = unknown>(
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
-  Awaited<ReturnType<typeof editProfile>>,
+  Awaited<ReturnType<typeof updateUserProfile>>,
   TError,
   { data: EditProfileDto },
   TContext
 > => {
-  return useMutation(getEditProfileMutationOptions(options), queryClient);
+  return useMutation(getUpdateUserProfileMutationOptions(options), queryClient);
 };
 
 /**
  * @summary Delete authenticated user account
  */
-export const deleteProfile = (signal?: AbortSignal) => {
+export const deleteUserProfile = (signal?: AbortSignal) => {
   return orvalHttpClient<void>({
     url: `/accounts/me`,
     method: 'DELETE',
@@ -414,23 +565,23 @@ export const deleteProfile = (signal?: AbortSignal) => {
   });
 };
 
-export const getDeleteProfileMutationOptions = <
+export const getDeleteUserProfileMutationOptions = <
   TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof deleteProfile>>,
+    Awaited<ReturnType<typeof deleteUserProfile>>,
     TError,
     void,
     TContext
   >;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof deleteProfile>>,
+  Awaited<ReturnType<typeof deleteUserProfile>>,
   TError,
   void,
   TContext
 > => {
-  const mutationKey = ['deleteProfile'];
+  const mutationKey = ['deleteUserProfile'];
   const { mutation: mutationOptions } = options
     ? options.mutation &&
       'mutationKey' in options.mutation &&
@@ -440,28 +591,28 @@ export const getDeleteProfileMutationOptions = <
     : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof deleteProfile>>,
+    Awaited<ReturnType<typeof deleteUserProfile>>,
     void
   > = () => {
-    return deleteProfile();
+    return deleteUserProfile();
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type DeleteProfileMutationResult = NonNullable<
-  Awaited<ReturnType<typeof deleteProfile>>
+export type DeleteUserProfileMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteUserProfile>>
 >;
 
-export type DeleteProfileMutationError = void;
+export type DeleteUserProfileMutationError = void;
 
 /**
  * @summary Delete authenticated user account
  */
-export const useDeleteProfile = <TError = void, TContext = unknown>(
+export const useDeleteUserProfile = <TError = void, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof deleteProfile>>,
+      Awaited<ReturnType<typeof deleteUserProfile>>,
       TError,
       void,
       TContext
@@ -469,12 +620,12 @@ export const useDeleteProfile = <TError = void, TContext = unknown>(
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
-  Awaited<ReturnType<typeof deleteProfile>>,
+  Awaited<ReturnType<typeof deleteUserProfile>>,
   TError,
   void,
   TContext
 > => {
-  return useMutation(getDeleteProfileMutationOptions(options), queryClient);
+  return useMutation(getDeleteUserProfileMutationOptions(options), queryClient);
 };
 
 /**
@@ -633,7 +784,7 @@ export const getListProfessionalsQueryKey = (
 
 export const getListProfessionalsQueryOptions = <
   TData = Awaited<ReturnType<typeof listProfessionals>>,
-  TError = unknown,
+  TError = void,
 >(
   params?: ListProfessionalsParams,
   options?: {
@@ -665,11 +816,11 @@ export const getListProfessionalsQueryOptions = <
 export type ListProfessionalsQueryResult = NonNullable<
   Awaited<ReturnType<typeof listProfessionals>>
 >;
-export type ListProfessionalsQueryError = unknown;
+export type ListProfessionalsQueryError = void;
 
 export function useListProfessionals<
   TData = Awaited<ReturnType<typeof listProfessionals>>,
-  TError = unknown,
+  TError = void,
 >(
   params: undefined | ListProfessionalsParams,
   options: {
@@ -695,7 +846,7 @@ export function useListProfessionals<
 };
 export function useListProfessionals<
   TData = Awaited<ReturnType<typeof listProfessionals>>,
-  TError = unknown,
+  TError = void,
 >(
   params?: ListProfessionalsParams,
   options?: {
@@ -721,7 +872,7 @@ export function useListProfessionals<
 };
 export function useListProfessionals<
   TData = Awaited<ReturnType<typeof listProfessionals>>,
-  TError = unknown,
+  TError = void,
 >(
   params?: ListProfessionalsParams,
   options?: {
@@ -743,7 +894,7 @@ export function useListProfessionals<
 
 export function useListProfessionals<
   TData = Awaited<ReturnType<typeof listProfessionals>>,
-  TError = unknown,
+  TError = void,
 >(
   params?: ListProfessionalsParams,
   options?: {
@@ -1251,12 +1402,12 @@ export function useHealthCheck<
 /**
  * @summary Upload avatar for authenticated user
  */
-export const uploadAvatar = (
-  uploadAvatarBody: UploadAvatarBody,
+export const uploadUserAvatar = (
+  uploadUserAvatarBody: UploadUserAvatarBody,
   signal?: AbortSignal,
 ) => {
   const formData = new FormData();
-  formData.append(`avatar`, uploadAvatarBody.avatar);
+  formData.append(`avatar`, uploadUserAvatarBody.avatar);
 
   return orvalHttpClient<void>({
     url: `/accounts/me/avatar`,
@@ -1266,23 +1417,23 @@ export const uploadAvatar = (
   });
 };
 
-export const getUploadAvatarMutationOptions = <
+export const getUploadUserAvatarMutationOptions = <
   TError = void,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof uploadAvatar>>,
+    Awaited<ReturnType<typeof uploadUserAvatar>>,
     TError,
-    { data: UploadAvatarBody },
+    { data: UploadUserAvatarBody },
     TContext
   >;
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof uploadAvatar>>,
+  Awaited<ReturnType<typeof uploadUserAvatar>>,
   TError,
-  { data: UploadAvatarBody },
+  { data: UploadUserAvatarBody },
   TContext
 > => {
-  const mutationKey = ['uploadAvatar'];
+  const mutationKey = ['uploadUserAvatar'];
   const { mutation: mutationOptions } = options
     ? options.mutation &&
       'mutationKey' in options.mutation &&
@@ -1292,41 +1443,41 @@ export const getUploadAvatarMutationOptions = <
     : { mutation: { mutationKey } };
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof uploadAvatar>>,
-    { data: UploadAvatarBody }
+    Awaited<ReturnType<typeof uploadUserAvatar>>,
+    { data: UploadUserAvatarBody }
   > = (props) => {
     const { data } = props ?? {};
 
-    return uploadAvatar(data);
+    return uploadUserAvatar(data);
   };
 
   return { mutationFn, ...mutationOptions };
 };
 
-export type UploadAvatarMutationResult = NonNullable<
-  Awaited<ReturnType<typeof uploadAvatar>>
+export type UploadUserAvatarMutationResult = NonNullable<
+  Awaited<ReturnType<typeof uploadUserAvatar>>
 >;
-export type UploadAvatarMutationBody = UploadAvatarBody;
-export type UploadAvatarMutationError = void;
+export type UploadUserAvatarMutationBody = UploadUserAvatarBody;
+export type UploadUserAvatarMutationError = void;
 
 /**
  * @summary Upload avatar for authenticated user
  */
-export const useUploadAvatar = <TError = void, TContext = unknown>(
+export const useUploadUserAvatar = <TError = void, TContext = unknown>(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof uploadAvatar>>,
+      Awaited<ReturnType<typeof uploadUserAvatar>>,
       TError,
-      { data: UploadAvatarBody },
+      { data: UploadUserAvatarBody },
       TContext
     >;
   },
   queryClient?: QueryClient,
 ): UseMutationResult<
-  Awaited<ReturnType<typeof uploadAvatar>>,
+  Awaited<ReturnType<typeof uploadUserAvatar>>,
   TError,
-  { data: UploadAvatarBody },
+  { data: UploadUserAvatarBody },
   TContext
 > => {
-  return useMutation(getUploadAvatarMutationOptions(options), queryClient);
+  return useMutation(getUploadUserAvatarMutationOptions(options), queryClient);
 };
