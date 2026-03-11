@@ -9,7 +9,7 @@ import { routeTree } from './routeTree.gen.ts';
 
 const enableMSW = async () => {
   if (env.VITE_ENV === 'test') {
-    const { worker } = await import('./__mocks__/browser.ts');
+    const { worker } = await import('@mocks/browser.ts');
 
     return worker.start();
   }
