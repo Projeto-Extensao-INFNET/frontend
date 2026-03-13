@@ -5,6 +5,9 @@
  * API do Projeto de Extensão - documentação Swagger
  * OpenAPI spec version: 1.0.0
  */
+/**
+ * Papel do usuário no sistema.
+ */
 export type SignUpDtoRole = (typeof SignUpDtoRole)[keyof typeof SignUpDtoRole];
 
 export const SignUpDtoRole = {
@@ -13,6 +16,9 @@ export const SignUpDtoRole = {
   ADMIN: 'ADMIN',
 } as const;
 
+/**
+ * Tipo de documento.
+ */
 export type SignUpDtoDocumentType =
   (typeof SignUpDtoDocumentType)[keyof typeof SignUpDtoDocumentType];
 
@@ -22,77 +28,84 @@ export const SignUpDtoDocumentType = {
 } as const;
 
 export interface SignUpDto {
+  /** Nome completo do usuário. */
   name: string;
+  /** E-mail do usuário. */
   email: string;
+  /** Senha do usuário. */
   password: string;
+  /** Data de nascimento do usuário. */
   birthDate: string;
+  /** Papel do usuário no sistema. */
   role: SignUpDtoRole;
+  /** Tipo de documento. */
   documentType: SignUpDtoDocumentType;
-  document: string;
-}
-
-export type SignUpResponseDtoRole =
-  (typeof SignUpResponseDtoRole)[keyof typeof SignUpResponseDtoRole];
-
-export const SignUpResponseDtoRole = {
-  PATIENT: 'PATIENT',
-  PROFESSIONAL: 'PROFESSIONAL',
-  ADMIN: 'ADMIN',
-} as const;
-
-export type SignUpResponseDtoDocumentType =
-  (typeof SignUpResponseDtoDocumentType)[keyof typeof SignUpResponseDtoDocumentType];
-
-export const SignUpResponseDtoDocumentType = {
-  CPF: 'CPF',
-  RG: 'RG',
-} as const;
-
-export interface SignUpResponseDto {
-  name: string;
-  email: string;
-  birthDate: string;
-  role: SignUpResponseDtoRole;
-  documentType: SignUpResponseDtoDocumentType;
+  /** Número do documento. */
   document: string;
 }
 
 export interface SignInDto {
+  /** E-mail do usuário. */
   email: string;
+  /** Senha do usuário. */
   password: string;
 }
 
-export interface AccessTokenResponse {
+export interface AuthResponse {
+  /** Token JWT de acesso. */
   accessToken: string;
+  /** Token JWT de refresh. */
+  refreshToken: string;
 }
 
 export interface LogoutResponse {
+  /** Mensagem de logout bem-sucedido. */
   message: string;
 }
 
 export interface GetUserProfileResponse {
+  /** ID do usuário. */
   id: string;
+  /** Nome completo do usuário. */
   name: string;
+  /** E-mail do usuário. */
   email: string;
+  /** Data de nascimento. */
   birthDate: string;
+  /** Avatar do usuário em base64. */
   avatar: string;
+  /** Papel do usuário. */
   role: string;
+  /** Número do documento. */
   document: string;
 }
 
 export interface EditProfileDto {
+  /** Nome completo do usuário. */
   name?: string;
+  /** Avatar do usuário em base64. */
   avatar?: string;
 }
 
 export interface CreateAppointmentDto {
+  /** ID do agendamento. */
   scheduleId: string;
+  /** ID do usuário. */
   userId: string;
+  /** ID da especialidade. */
   specialtyId: string;
+  /** ID do tipo de tratamento. */
   typeOfTreatmentId: string;
+  /** Se está disponível. */
   isAvailable: boolean;
+  /** Se está cancelado. */
   isConfirmed: boolean;
 }
+
+export type DeleteUserProfile200 = {
+  status?: number;
+  message?: string;
+};
 
 export type ListUsersParams = {
   limit?: number;

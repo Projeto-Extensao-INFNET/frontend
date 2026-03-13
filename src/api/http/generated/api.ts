@@ -22,8 +22,9 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
-  AccessTokenResponse,
+  AuthResponse,
   CreateAppointmentDto,
+  DeleteUserProfile200,
   EditProfileDto,
   GetAppointment200Item,
   GetUserProfileResponse,
@@ -35,7 +36,6 @@ import type {
   LogoutResponse,
   SignInDto,
   SignUpDto,
-  SignUpResponseDto,
   UpdateAppointment200,
   UploadUserAvatarBody,
 } from './api.schemas';
@@ -43,10 +43,11 @@ import type {
 import { orvalHttpClient } from '../../http-client';
 
 /**
+ * Cria um novo usuário e retorna os dados do usuário criado.
  * @summary Create a new user account
  */
 export const signUp = (signUpDto: SignUpDto, signal?: AbortSignal) => {
-  return orvalHttpClient<SignUpResponseDto>({
+  return orvalHttpClient<unknown>({
     url: `/auth/signup`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -124,7 +125,7 @@ export const useSignUp = <TError = void, TContext = unknown>(
  * @summary Authenticate and receive access token
  */
 export const signIn = (signInDto: SignInDto, signal?: AbortSignal) => {
-  return orvalHttpClient<AccessTokenResponse>({
+  return orvalHttpClient<AuthResponse>({
     url: `/auth/signin`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -203,7 +204,7 @@ export const useSignIn = <TError = void, TContext = unknown>(
  * @summary Refresh access token using the refresh token cookie
  */
 export const refreshToken = (signal?: AbortSignal) => {
-  return orvalHttpClient<AccessTokenResponse>({
+  return orvalHttpClient<AuthResponse>({
     url: `/auth/refresh`,
     method: 'POST',
     signal,
@@ -558,7 +559,7 @@ export const useUpdateUserProfile = <TError = void, TContext = unknown>(
  * @summary Delete authenticated user account
  */
 export const deleteUserProfile = (signal?: AbortSignal) => {
-  return orvalHttpClient<void>({
+  return orvalHttpClient<DeleteUserProfile200>({
     url: `/accounts/me`,
     method: 'DELETE',
     signal,

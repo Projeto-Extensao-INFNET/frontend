@@ -11,74 +11,46 @@ import { HttpResponse, delay, http } from 'msw';
 import type { RequestHandlerOptions } from 'msw';
 
 import type {
-  AccessTokenResponse,
+  AuthResponse,
+  DeleteUserProfile200,
   GetAppointment200Item,
   GetUserProfileResponse,
   HealthCheck200,
   ListProfessionals200,
   ListUsers200,
   LogoutResponse,
-  SignUpResponseDto,
   UpdateAppointment200,
 } from './api.schemas';
 
-export const getSignUpResponseMock = (
-  overrideResponse: Partial<Extract<SignUpResponseDto, object>> = {},
-): SignUpResponseDto => ({
-  name: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  email: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  birthDate: faker.date.past().toISOString().slice(0, 19) + 'Z',
-  role: faker.helpers.arrayElement([
-    'PATIENT',
-    'PROFESSIONAL',
-    'ADMIN',
-  ] as const),
-  documentType: faker.helpers.arrayElement(['CPF', 'RG'] as const),
-  document: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  ...overrideResponse,
-});
-
-export const getSignUpResponseMock201 = (
-  overrideResponse: Partial<Extract<SignUpResponseDto, object>> = {},
-): SignUpResponseDto => ({
-  name: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  email: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  birthDate: faker.date.past().toISOString().slice(0, 19) + 'Z',
-  role: faker.helpers.arrayElement([
-    'PATIENT',
-    'PROFESSIONAL',
-    'ADMIN',
-  ] as const),
-  documentType: faker.helpers.arrayElement(['CPF', 'RG'] as const),
-  document: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  ...overrideResponse,
-});
-
 export const getSignInResponseMock = (
-  overrideResponse: Partial<Extract<AccessTokenResponse, object>> = {},
-): AccessTokenResponse => ({
+  overrideResponse: Partial<Extract<AuthResponse, object>> = {},
+): AuthResponse => ({
   accessToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  refreshToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
   ...overrideResponse,
 });
 
 export const getSignInResponseMock201 = (
-  overrideResponse: Partial<Extract<AccessTokenResponse, object>> = {},
-): AccessTokenResponse => ({
+  overrideResponse: Partial<Extract<AuthResponse, object>> = {},
+): AuthResponse => ({
   accessToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  refreshToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
   ...overrideResponse,
 });
 
 export const getRefreshTokenResponseMock = (
-  overrideResponse: Partial<Extract<AccessTokenResponse, object>> = {},
-): AccessTokenResponse => ({
+  overrideResponse: Partial<Extract<AuthResponse, object>> = {},
+): AuthResponse => ({
   accessToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  refreshToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
   ...overrideResponse,
 });
 
 export const getRefreshTokenResponseMock201 = (
-  overrideResponse: Partial<Extract<AccessTokenResponse, object>> = {},
-): AccessTokenResponse => ({
+  overrideResponse: Partial<Extract<AuthResponse, object>> = {},
+): AuthResponse => ({
   accessToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  refreshToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
   ...overrideResponse,
 });
 
@@ -145,6 +117,34 @@ export const getUpdateUserProfileResponseMock200 = (
   avatar: faker.string.alpha({ length: { min: 10, max: 20 } }),
   role: faker.string.alpha({ length: { min: 10, max: 20 } }),
   document: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  ...overrideResponse,
+});
+
+export const getDeleteUserProfileResponseMock = (
+  overrideResponse: Partial<Extract<DeleteUserProfile200, object>> = {},
+): DeleteUserProfile200 => ({
+  status: faker.helpers.arrayElement([
+    faker.number.float({ fractionDigits: 2 }),
+    undefined,
+  ]),
+  message: faker.helpers.arrayElement([
+    faker.string.alpha({ length: { min: 10, max: 20 } }),
+    undefined,
+  ]),
+  ...overrideResponse,
+});
+
+export const getDeleteUserProfileResponseMock200 = (
+  overrideResponse: Partial<Extract<DeleteUserProfile200, object>> = {},
+): DeleteUserProfile200 => ({
+  status: faker.helpers.arrayElement([
+    faker.number.float({ fractionDigits: 2 }),
+    undefined,
+  ]),
+  message: faker.helpers.arrayElement([
+    faker.string.alpha({ length: { min: 10, max: 20 } }),
+    undefined,
+  ]),
   ...overrideResponse,
 });
 
@@ -564,25 +564,21 @@ export const getHealthCheckResponseMock200 = (
 
 export const getSignUpMockHandler = (
   overrideResponse?:
-    | SignUpResponseDto
+    | unknown
     | ((
         info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => Promise<SignUpResponseDto> | SignUpResponseDto),
+      ) => Promise<unknown> | unknown),
   options?: RequestHandlerOptions,
 ) => {
   return http.post(
     '*/auth/signup',
     async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
       await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
 
-      return HttpResponse.json(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getSignUpResponseMock(),
-        { status: 201 },
-      );
+      return new HttpResponse(null, { status: 201 });
     },
     options,
   );
@@ -590,25 +586,21 @@ export const getSignUpMockHandler = (
 
 export const getSignUpMockHandler201 = (
   overrideResponse?:
-    | SignUpResponseDto
+    | unknown
     | ((
         info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => Promise<SignUpResponseDto> | SignUpResponseDto),
+      ) => Promise<unknown> | unknown),
   options?: RequestHandlerOptions,
 ) => {
   return http.post(
     '*/auth/signup',
     async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
       await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
 
-      return HttpResponse.json(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getSignUpResponseMock201(),
-        { status: 201 },
-      );
+      return new HttpResponse(null, { status: 201 });
     },
     options,
   );
@@ -660,10 +652,10 @@ export const getSignUpMockHandler409 = (
 
 export const getSignInMockHandler = (
   overrideResponse?:
-    | AccessTokenResponse
+    | AuthResponse
     | ((
         info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => Promise<AccessTokenResponse> | AccessTokenResponse),
+      ) => Promise<AuthResponse> | AuthResponse),
   options?: RequestHandlerOptions,
 ) => {
   return http.post(
@@ -686,10 +678,10 @@ export const getSignInMockHandler = (
 
 export const getSignInMockHandler201 = (
   overrideResponse?:
-    | AccessTokenResponse
+    | AuthResponse
     | ((
         info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => Promise<AccessTokenResponse> | AccessTokenResponse),
+      ) => Promise<AuthResponse> | AuthResponse),
   options?: RequestHandlerOptions,
 ) => {
   return http.post(
@@ -734,10 +726,10 @@ export const getSignInMockHandler401 = (
 
 export const getRefreshTokenMockHandler = (
   overrideResponse?:
-    | AccessTokenResponse
+    | AuthResponse
     | ((
         info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => Promise<AccessTokenResponse> | AccessTokenResponse),
+      ) => Promise<AuthResponse> | AuthResponse),
   options?: RequestHandlerOptions,
 ) => {
   return http.post(
@@ -760,10 +752,10 @@ export const getRefreshTokenMockHandler = (
 
 export const getRefreshTokenMockHandler201 = (
   overrideResponse?:
-    | AccessTokenResponse
+    | AuthResponse
     | ((
         info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => Promise<AccessTokenResponse> | AccessTokenResponse),
+      ) => Promise<AuthResponse> | AuthResponse),
   options?: RequestHandlerOptions,
 ) => {
   return http.post(
@@ -1052,43 +1044,51 @@ export const getUpdateUserProfileMockHandler401 = (
 
 export const getDeleteUserProfileMockHandler = (
   overrideResponse?:
-    | void
+    | DeleteUserProfile200
     | ((
         info: Parameters<Parameters<typeof http.delete>[1]>[0],
-      ) => Promise<void> | void),
+      ) => Promise<DeleteUserProfile200> | DeleteUserProfile200),
   options?: RequestHandlerOptions,
 ) => {
   return http.delete(
     '*/accounts/me',
     async (info: Parameters<Parameters<typeof http.delete>[1]>[0]) => {
       await delay(1000);
-      if (typeof overrideResponse === 'function') {
-        await overrideResponse(info);
-      }
 
-      return new HttpResponse(null, { status: 204 });
+      return HttpResponse.json(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === 'function'
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getDeleteUserProfileResponseMock(),
+        { status: 200 },
+      );
     },
     options,
   );
 };
 
-export const getDeleteUserProfileMockHandler204 = (
+export const getDeleteUserProfileMockHandler200 = (
   overrideResponse?:
-    | void
+    | DeleteUserProfile200
     | ((
         info: Parameters<Parameters<typeof http.delete>[1]>[0],
-      ) => Promise<void> | void),
+      ) => Promise<DeleteUserProfile200> | DeleteUserProfile200),
   options?: RequestHandlerOptions,
 ) => {
   return http.delete(
     '*/accounts/me',
     async (info: Parameters<Parameters<typeof http.delete>[1]>[0]) => {
       await delay(1000);
-      if (typeof overrideResponse === 'function') {
-        await overrideResponse(info);
-      }
 
-      return new HttpResponse(null, { status: 204 });
+      return HttpResponse.json(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === 'function'
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getDeleteUserProfileResponseMock200(),
+        { status: 200 },
+      );
     },
     options,
   );
