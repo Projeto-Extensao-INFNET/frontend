@@ -3,6 +3,7 @@ import { Label } from './_components/label';
 import { Field } from './_components/field';
 import { Input } from './_components/input';
 import { Container } from './_components/container';
+import { Error } from './_components/error';
 
 export const Form = {
   Container: Container,
@@ -10,4 +11,5 @@ export const Form = {
   Label: Label,
   Field: Field,
   Input: Input,
+  Error: Error,
 };

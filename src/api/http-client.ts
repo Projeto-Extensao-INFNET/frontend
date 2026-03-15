@@ -16,23 +16,26 @@ const BASE_URL = env.VITE_BASE_URL;
 // HTTP client customizado
 export class httpClient implements IHttpClient {
   public api: AxiosInstance;
+  // private isRefreshing = false;
 
   public constructor() {
-    this.api = axios.create({ baseURL: BASE_URL });
+    this.api = axios.create({
+      baseURL: BASE_URL,
+      withCredentials: true, // cookies são enviados nas reqs pro backend
+    });
     this.setupInterceptors();
   }
 
   public setupInterceptors() {
-    this.api.interceptors.request.use(
-      (config) => {
-        const accessToken = localStorage.getItem('accessToken');
-
-        if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
-
-        return config;
-      },
-      (error) => Promise.reject(error),
-    );
+    // adiciona o accessToken nos headers
+    // this.api.interceptors.request.use(
+    //   (config) => {
+    //     const accessToken = localStorage.getItem('auth');
+    //     if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
+    //     return config;
+    //   },
+    //   (error) => Promise.reject(error),
+    // );
   }
 
   async request<TResponse, TBody = unknown>(props: HttpRequest<TBody>) {
