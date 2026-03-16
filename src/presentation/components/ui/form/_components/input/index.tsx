@@ -3,10 +3,11 @@ import { ShowPassword } from '../show-password';
 import { useInputModel } from './input.model';
 import { twMerge } from 'tailwind-merge';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
-
 // forwardRef => envia a ref do input para o React Hook Form
-export const Input = forwardRef<HTMLInputElement, InputProps>(
+export const Input = forwardRef<
+  HTMLInputElement,
+  InputHTMLAttributes<HTMLInputElement>
+>(
   (
     {
       onFocus,
