@@ -26,17 +26,7 @@ export class httpClient implements IHttpClient {
     this.setupInterceptors();
   }
 
-  public setupInterceptors() {
-    // adiciona o accessToken nos headers
-    // this.api.interceptors.request.use(
-    //   (config) => {
-    //     const accessToken = localStorage.getItem('auth');
-    //     if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
-    //     return config;
-    //   },
-    //   (error) => Promise.reject(error),
-    // );
-  }
+  public setupInterceptors() {}
 
   async request<TResponse, TBody = unknown>(props: HttpRequest<TBody>) {
     const { endpoint, method, body, headers } = props;
