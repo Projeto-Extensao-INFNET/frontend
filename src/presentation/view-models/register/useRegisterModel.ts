@@ -1,11 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSignUp } from '@/api/http/generated/api';
-import type { SignUpDto } from '@/api/http/generated/api.schemas';
-import {
-  registerFormSchema,
-  type RegisterFormSchema,
-} from '@/shared/schemas/auth/register';
+import { registerFormSchema, type RegisterFormSchema } from './register.schema';
+import { useNavigate } from '@tanstack/react-router';
 
 export const useRegisterModel = () => {
   const {
@@ -13,31 +10,37 @@ export const useRegisterModel = () => {
     handleSubmit,
     reset,
     formState: { errors },
+    control,
   } = useForm<RegisterFormSchema>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
       name: '',
       email: '',
       password: '',
-      birthDate: new Date(),
+      confirm_password: '',
+      birthDate: '',
       documentType: 'CPF',
       document: '',
       role: 'PATIENT',
     },
+    mode: 'onSubmit',
   });
 
-  const { mutateAsync: registerMutation, isPending, isError } = useSignUp();
+  const navigate = useNavigate({ from: '/register' });
+
+  const { mutateAsync: registerMutation, isPending } = useSignUp();
 
   const onSubmit = handleSubmit(async (data: RegisterFormSchema) => {
-    console.log('CHAMOU SUBMIT');
-    const validatedData: SignUpDto = {
-      ...data,
-      birthDate: data.birthDate.toISOString(),
-    };
-    console.log('DADOS REGISTRO', data);
-    await registerMutation({ data: validatedData });
+    await registerMutation({ data });
     reset();
+    navigate({ to: '/home', replace: true });
   });
 
-  return { register, onSubmit, isPending, errors, isError };
+  return {
+    register,
+    onSubmit,
+    isPending,
+    errors,
+    control,
+  };
 };
