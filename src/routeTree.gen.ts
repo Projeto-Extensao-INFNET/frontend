@@ -8,52 +8,111 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as rootRouteImport } from './routes/__root';
+import { Route as IndexRouteImport } from './routes/index';
+import { Route as RegisterRegisterRouteImport } from './routes/_register/register';
+import { Route as LoginLoginRouteImport } from './routes/_login/login';
+import { Route as HomeHomeRouteImport } from './routes/_home/home';
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
+const RegisterRegisterRoute = RegisterRegisterRouteImport.update({
+  id: '/_register/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any);
+const LoginLoginRoute = LoginLoginRouteImport.update({
+  id: '/_login/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any);
+const HomeHomeRoute = HomeHomeRouteImport.update({
+  id: '/_home/home',
+  path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/': typeof IndexRoute;
+  '/home': typeof HomeHomeRoute;
+  '/login': typeof LoginLoginRoute;
+  '/register': typeof RegisterRegisterRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/': typeof IndexRoute;
+  '/home': typeof HomeHomeRoute;
+  '/login': typeof LoginLoginRoute;
+  '/register': typeof RegisterRegisterRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  __root__: typeof rootRouteImport;
+  '/': typeof IndexRoute;
+  '/_home/home': typeof HomeHomeRoute;
+  '/_login/login': typeof LoginLoginRoute;
+  '/_register/register': typeof RegisterRegisterRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
-  fileRoutesById: FileRoutesById
+  fileRoutesByFullPath: FileRoutesByFullPath;
+  fullPaths: '/' | '/home' | '/login' | '/register';
+  fileRoutesByTo: FileRoutesByTo;
+  to: '/' | '/home' | '/login' | '/register';
+  id:
+    | '__root__'
+    | '/'
+    | '/_home/home'
+    | '/_login/login'
+    | '/_register/register';
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  IndexRoute: typeof IndexRoute;
+  HomeHomeRoute: typeof HomeHomeRoute;
+  LoginLoginRoute: typeof LoginLoginRoute;
+  RegisterRegisterRoute: typeof RegisterRegisterRoute;
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/';
+      path: '/';
+      fullPath: '/';
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    '/_register/register': {
+      id: '/_register/register';
+      path: '/register';
+      fullPath: '/register';
+      preLoaderRoute: typeof RegisterRegisterRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    '/_login/login': {
+      id: '/_login/login';
+      path: '/login';
+      fullPath: '/login';
+      preLoaderRoute: typeof LoginLoginRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    '/_home/home': {
+      id: '/_home/home';
+      path: '/home';
+      fullPath: '/home';
+      preLoaderRoute: typeof HomeHomeRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-}
+  HomeHomeRoute: HomeHomeRoute,
+  LoginLoginRoute: LoginLoginRoute,
+  RegisterRegisterRoute: RegisterRegisterRoute,
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
