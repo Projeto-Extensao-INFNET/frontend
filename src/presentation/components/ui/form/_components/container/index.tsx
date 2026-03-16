@@ -5,5 +5,5 @@ interface ContainerProps {
 }
 
 export const Container: FC<ContainerProps> = ({ children }) => {
-  return <div className="">{children}</div>;
+  return <div className="flex flex-col">{children}</div>;
 };

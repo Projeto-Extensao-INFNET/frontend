@@ -15,7 +15,7 @@ export const Root: FC<RootProps> = ({
     <form
       className={twMerge(
         className,
-        'flex flex-col items-center justify-center',
+        'flex w-96 flex-col items-center justify-center',
       )}
       {...props}
       onSubmit={onSubmit}
