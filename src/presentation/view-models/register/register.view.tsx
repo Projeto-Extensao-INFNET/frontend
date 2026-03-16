@@ -2,21 +2,22 @@ import type { FC } from 'react';
 import type { useRegisterModel } from './useRegisterModel';
 import { Form } from '@/presentation/components/ui/form';
 import { Button } from '@/presentation/components/ui/button';
-
-// TODO => implementar campos que faltam no form (Data nascimento e documento)
-// TODO => implementar escolha do tipo do perfil (Paciente/Profissional)
+import { DatePicker } from '@/presentation/components/ui/date-picker';
+import { Controller } from 'react-hook-form';
+import { PageTitle } from './_components/page-title';
+import { ACCOUNT_TYPES, DOCUMENT_TYPES } from '@/shared/constants/constants';
 
 export const RegisterView: FC<ReturnType<typeof useRegisterModel>> = ({
   onSubmit,
   register,
   isPending,
   errors,
+  control,
 }) => {
   return (
-    <section className="flex h-screen items-center justify-center">
-      <div className="h-156.5 w-96 rounded-md border text-center">
-        <h1 className="mt-2 font-bold">Login</h1>
-
+    <main>
+      <PageTitle />
+      <section className="flex items-center justify-center">
         <div className="mt-12">
           <Form.Container>
             <Form.Root onSubmit={onSubmit}>
@@ -44,6 +45,58 @@ export const RegisterView: FC<ReturnType<typeof useRegisterModel>> = ({
                 )}
               </Form.Field>
 
+              <Form.Label label="Data de nascimento" />
+              <Form.Field className="relative">
+                <Controller
+                  name="birthDate"
+                  control={control}
+                  render={({ field }) => (
+                    <DatePicker
+                      value={field.value ? new Date(field.value) : undefined}
+                      onChange={(date) => field.onChange(date?.toISOString())}
+                    />
+                  )}
+                />
+              </Form.Field>
+
+              <Form.Label label="Tipo de conta" />
+              {ACCOUNT_TYPES.map((acc) => (
+                <Form.Field key={acc.id}>
+                  <Form.Input
+                    type="radio"
+                    {...register('role')}
+                    value={acc.role}
+                    className=""
+                  />
+                  <Form.Label label={acc.value} />
+                </Form.Field>
+              ))}
+
+              <Form.Label label="Tipo de documento" />
+              {DOCUMENT_TYPES.map((doc) => (
+                <Form.Field key={doc.id}>
+                  <Form.Input
+                    type="radio"
+                    {...register('documentType')}
+                    value={doc.value}
+                    className=""
+                  />
+                  <Form.Label label={doc.value} />
+                </Form.Field>
+              ))}
+
+              <Form.Label label="Documento" />
+              <Form.Field>
+                <Form.Input
+                  type="text"
+                  placeholder="informe seu documento"
+                  {...register('document')}
+                />{' '}
+                {errors.document && (
+                  <Form.Error errorMessage={errors.document.message} />
+                )}
+              </Form.Field>
+
               <Form.Label label="Senha" />
               <Form.Field>
                 <Form.Input
@@ -67,14 +120,32 @@ export const RegisterView: FC<ReturnType<typeof useRegisterModel>> = ({
                   <Form.Error errorMessage={errors.confirm_password.message} />
                 )}
               </Form.Field>
-              <div className="mb-5 flex flex-col gap-3">
-                <Button type="submit" text="Registrar" disabled={isPending} />
-                <Button type="button" text="Já possui conta? Acessar!" />
+
+              <div className="mb-5 flex h-full flex-col items-center justify-center pt-4">
+                <div className="space-y-2">
+                  {' '}
+                  <Button
+                    type="submit"
+                    size={'lg'}
+                    disabled={isPending}
+                    className="min-w-full"
+                  >
+                    {isPending ? 'Registrando...' : 'Registrar'}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={'secondary'}
+                    size={'lg'}
+                    className="min-w-full"
+                  >
+                    Já possui conta? Acessar!
+                  </Button>
+                </div>
               </div>
             </Form.Root>
           </Form.Container>
         </div>
-      </div>
-    </section>
+      </section>
+    </main>
   );
 };
