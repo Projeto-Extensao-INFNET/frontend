@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { Eye, EyeClosed } from 'lucide-react';
 
 interface ShowPasswordProps {
   onClick: () => void;
@@ -17,9 +17,9 @@ export const ShowPassword: FC<ShowPasswordProps> = ({
       onClick={onClick}
     >
       {showPassword ? (
-        <FaEye size={20} color="black" />
+        <Eye size={20} color="black" />
       ) : (
-        <FaEyeSlash size={20} color="black" height={20} />
+        <EyeClosed size={20} color="black" height={20} />
       )}
     </button>
   );
