@@ -1,42 +1,48 @@
-/// <reference types="vitest" />
-
-import path from 'node:path';
 import react from '@vitejs/plugin-react';
-
+import tsConfigPaths from 'vite-tsconfig-paths';
+import { resolve } from 'node:path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
+    include: ['**/*.{spec,test}.{ts,tsx}'],
+    reporters: ['verbose'],
     environment: 'jsdom',
-
+    root: './',
     globals: true,
-
-    fileParallelism: false,
-
-    setupFiles: ['vitest.setup.ts'],
-    globalSetup: ['vitest.global.setup.ts'],
-    include: ['src/**/*.{spec,test}.{ts,tsx}'],
-    testTimeout: 10_000,
+    restoreMocks: true,
+    clearMocks: true,
+    testTimeout: 10000,
+    setupFiles: [resolve(__dirname, 'vitest.setup.ts')],
     coverage: {
       reportsDirectory: './coverage',
+      reporter: ['text', 'html', 'lcov', 'cobertura'],
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
       exclude: [
         '**/*.test.{ts,tsx}',
         '**/*.spec.{ts,tsx}',
+        '**/*.e2e-spec.ts',
         '**/types/**',
         '**/*.d.ts',
         '**/mocks/**',
-        '**/*.test-utils.{ts,tsx}',
-        '**/*.stories.{ts,tsx}',
+        '/node_modules/',
+        '/e2e/',
       ],
+      thresholds: {
+        global: {
+          branches: 70,
+          functions: 70,
+          lines: 70,
+          statements: 70,
+        },
+      },
     },
   },
-
-  plugins: [react()],
+  plugins: [tsConfigPaths(), react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'),
+      src: resolve(__dirname, './src'),
     },
   },
 });

@@ -8,21 +8,33 @@
     "skipLibCheck": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
+    "erasableSyntaxOnly": false,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "types": ["vitest/globals"],
+    "types": ["vitest/globals", "node", "@testing-library/jest-dom"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@types/*": ["./src/@types/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@api/*": ["./src/api/*"],
+      "@http/*": ["./src/api/http/*"],
+      "@services/*": ["./src/domain/services/*"],
+      "@presentation/*": ["./src/presentation/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@helpers/*": ["./src/helpers/*"],
+      "@tests/*": ["src/__tests__/*"],
+      "@mocks/*": ["src/__mocks__/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "orval.config.ts"]
 }

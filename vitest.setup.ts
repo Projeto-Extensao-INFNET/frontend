@@ -1,13 +1,9 @@
-/** biome-ignore-all lint/performance/noNamespaceImport: mandatory by react testing library */
-import { cleanup } from '@testing-library/react';
-import { afterEach, expect, vi } from 'vitest';
-import '@testing-library/jest-dom/vitest';
-import * as matchers from '@testing-library/jest-dom/matchers';
+import '@testing-library/jest-dom';
+import { beforeAll, afterAll, afterEach, beforeEach } from 'vitest';
+import { cleanup } from './src/__tests__/custom-render';
+import { server } from './src/__mocks__/node';
 
-expect.extend(matchers);
-
-afterEach(() => {
-  cleanup();
-
-  vi.resetAllMocks();
-});
+beforeEach(() => cleanup());
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
