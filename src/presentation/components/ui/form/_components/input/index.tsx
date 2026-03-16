@@ -1,6 +1,7 @@
 import { forwardRef, type InputHTMLAttributes } from 'react';
 import { ShowPassword } from '../show-password';
 import { useInputModel } from './input.model';
+import { twMerge } from 'tailwind-merge';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
 
@@ -8,13 +9,13 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
-      className,
       onFocus,
       onBlur,
       value,
       onChange,
       placeholder,
       type,
+      className,
       ...props
     },
     ref,
@@ -26,7 +27,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           placeholder={placeholder}
-          className="w-full rounded-md border border-black bg-white px-2 py-3.5"
+          className={twMerge(
+            'w-full rounded-md border border-black bg-white px-2 py-3.5',
+            className,
+          )}
           type={type === 'password' && showPassword ? 'text' : type}
           onFocus={onFocus}
           onBlur={onBlur}
