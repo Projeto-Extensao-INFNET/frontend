@@ -28,12 +28,14 @@ export const useRegisterModel = () => {
 
   const navigate = useNavigate({ from: '/register' });
 
+  const navigateToLogin = () => navigate({ to: '/login', replace: true });
+
   const { mutateAsync: registerMutation, isPending } = useSignUp();
 
   const onSubmit = handleSubmit(async (data: RegisterFormSchema) => {
     await registerMutation({ data });
     reset();
-    navigate({ to: '/home', replace: true });
+    navigate({ to: '/login', replace: true });
   });
 
   return {
@@ -42,5 +44,6 @@ export const useRegisterModel = () => {
     isPending,
     errors,
     control,
+    navigateToLogin,
   };
 };
