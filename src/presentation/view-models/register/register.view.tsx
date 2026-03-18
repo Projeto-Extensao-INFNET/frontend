@@ -4,8 +4,8 @@ import { Form } from '@/presentation/components/ui/form';
 import { Button } from '@/presentation/components/ui/button';
 import { DatePicker } from '@/presentation/components/ui/date-picker';
 import { Controller } from 'react-hook-form';
-import { PageTitle } from './_components/page-title';
 import { ACCOUNT_TYPES, DOCUMENT_TYPES } from '@/shared/constants/constants';
+import { PageTitle } from '@/presentation/components/page-title';
 
 export const RegisterView: FC<ReturnType<typeof useRegisterModel>> = ({
   onSubmit,
@@ -13,10 +13,11 @@ export const RegisterView: FC<ReturnType<typeof useRegisterModel>> = ({
   isPending,
   errors,
   control,
+  navigateToLogin,
 }) => {
   return (
     <main>
-      <PageTitle />
+      <PageTitle>Cadastro</PageTitle>
       <section className="flex items-center justify-center">
         <div className="mt-12">
           <Form.Container>
@@ -137,6 +138,7 @@ export const RegisterView: FC<ReturnType<typeof useRegisterModel>> = ({
                     variant={'secondary'}
                     size={'lg'}
                     className="min-w-full"
+                    onClick={navigateToLogin}
                   >
                     Já possui conta? Acessar!
                   </Button>
