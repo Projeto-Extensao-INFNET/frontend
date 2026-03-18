@@ -43,5 +43,4 @@ dist-ssr
 !.env.test.example
 !.env.example
 
-# TanStack 
-.tanstack/
+
