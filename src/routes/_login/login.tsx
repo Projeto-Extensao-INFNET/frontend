@@ -1,3 +1,4 @@
+import { Login } from '@/presentation/view-models/login';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_login/login')({
@@ -5,5 +6,5 @@ export const Route = createFileRoute('/_login/login')({
 });
 
 function RouteComponent() {
-  return <div>Hello "/login/"!</div>;
+  return <Login />;
 }
