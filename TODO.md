@@ -6,6 +6,15 @@
 
 ## Rotas
 
-[ ] - Melhorar o roteamento (validar qual vai ser a rota '/')
-[ ] - Criar tela de login minimamente funcional
+[x] - Melhorar o roteamento (validar qual vai ser a rota '/')
+[x] - Criar tela de login minimamente funcional
 [x] - Criar tela de cadastro minimamente funcional
+[ ] - Validar no root se o usuário está logado ou não e redirecionar para as páginas
+
+## Zustand
+
+[ ] - Corrigir a store de Auth para retornar dados do backend corretamente e talvez adicionar novos métodos
+
+## Outros TODOs espalhados pelo código
+
+[ ] - Feito
