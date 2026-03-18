@@ -11,7 +11,6 @@ import { HttpResponse, delay, http } from 'msw';
 import type { RequestHandlerOptions } from 'msw';
 
 import type {
-  AuthResponse,
   DeleteUserProfile200,
   GetAppointment200Item,
   GetUserProfileResponse,
@@ -19,38 +18,25 @@ import type {
   ListProfessionals200,
   ListUsers200,
   LogoutResponse,
+  SignInResponseDto,
   UpdateAppointment200,
 } from './api.schemas';
 
 export const getSignInResponseMock = (
-  overrideResponse: Partial<Extract<AuthResponse, object>> = {},
-): AuthResponse => ({
+  overrideResponse: Partial<Extract<SignInResponseDto, object>> = {},
+): SignInResponseDto => ({
   accessToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
   refreshToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  data: {},
   ...overrideResponse,
 });
 
 export const getSignInResponseMock201 = (
-  overrideResponse: Partial<Extract<AuthResponse, object>> = {},
-): AuthResponse => ({
+  overrideResponse: Partial<Extract<SignInResponseDto, object>> = {},
+): SignInResponseDto => ({
   accessToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
   refreshToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  ...overrideResponse,
-});
-
-export const getRefreshTokenResponseMock = (
-  overrideResponse: Partial<Extract<AuthResponse, object>> = {},
-): AuthResponse => ({
-  accessToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  refreshToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  ...overrideResponse,
-});
-
-export const getRefreshTokenResponseMock201 = (
-  overrideResponse: Partial<Extract<AuthResponse, object>> = {},
-): AuthResponse => ({
-  accessToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  refreshToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
+  data: {},
   ...overrideResponse,
 });
 
@@ -652,10 +638,10 @@ export const getSignUpMockHandler409 = (
 
 export const getSignInMockHandler = (
   overrideResponse?:
-    | AuthResponse
+    | SignInResponseDto
     | ((
         info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => Promise<AuthResponse> | AuthResponse),
+      ) => Promise<SignInResponseDto> | SignInResponseDto),
   options?: RequestHandlerOptions,
 ) => {
   return http.post(
@@ -678,10 +664,10 @@ export const getSignInMockHandler = (
 
 export const getSignInMockHandler201 = (
   overrideResponse?:
-    | AuthResponse
+    | SignInResponseDto
     | ((
         info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => Promise<AuthResponse> | AuthResponse),
+      ) => Promise<SignInResponseDto> | SignInResponseDto),
   options?: RequestHandlerOptions,
 ) => {
   return http.post(
@@ -726,25 +712,21 @@ export const getSignInMockHandler401 = (
 
 export const getRefreshTokenMockHandler = (
   overrideResponse?:
-    | AuthResponse
+    | unknown
     | ((
         info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => Promise<AuthResponse> | AuthResponse),
+      ) => Promise<unknown> | unknown),
   options?: RequestHandlerOptions,
 ) => {
   return http.post(
     '*/auth/refresh',
     async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
       await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
 
-      return HttpResponse.json(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getRefreshTokenResponseMock(),
-        { status: 201 },
-      );
+      return new HttpResponse(null, { status: 201 });
     },
     options,
   );
@@ -752,25 +734,21 @@ export const getRefreshTokenMockHandler = (
 
 export const getRefreshTokenMockHandler201 = (
   overrideResponse?:
-    | AuthResponse
+    | unknown
     | ((
         info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => Promise<AuthResponse> | AuthResponse),
+      ) => Promise<unknown> | unknown),
   options?: RequestHandlerOptions,
 ) => {
   return http.post(
     '*/auth/refresh',
     async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
       await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
 
-      return HttpResponse.json(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getRefreshTokenResponseMock201(),
-        { status: 201 },
-      );
+      return new HttpResponse(null, { status: 201 });
     },
     options,
   );

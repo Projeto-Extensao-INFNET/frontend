@@ -51,11 +51,18 @@ export interface SignInDto {
   password: string;
 }
 
-export interface AuthResponse {
-  /** Token JWT de acesso. */
+/**
+ * Dados do usuário autenticado.
+ */
+export type SignInResponseDtoData = { [key: string]: unknown };
+
+export interface SignInResponseDto {
+  /** JWT token de acesso. */
   accessToken: string;
-  /** Token JWT de refresh. */
+  /** JWT token de refresh. */
   refreshToken: string;
+  /** Dados do usuário autenticado. */
+  data: SignInResponseDtoData;
 }
 
 export interface LogoutResponse {

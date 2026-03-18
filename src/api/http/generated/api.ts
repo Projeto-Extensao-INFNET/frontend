@@ -22,7 +22,6 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
-  AuthResponse,
   CreateAppointmentDto,
   DeleteUserProfile200,
   EditProfileDto,
@@ -35,6 +34,7 @@ import type {
   ListUsersParams,
   LogoutResponse,
   SignInDto,
+  SignInResponseDto,
   SignUpDto,
   UpdateAppointment200,
   UploadUserAvatarBody,
@@ -125,7 +125,7 @@ export const useSignUp = <TError = void, TContext = unknown>(
  * @summary Authenticate and receive access token
  */
 export const signIn = (signInDto: SignInDto, signal?: AbortSignal) => {
-  return orvalHttpClient<AuthResponse>({
+  return orvalHttpClient<SignInResponseDto>({
     url: `/auth/signin`,
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -204,7 +204,7 @@ export const useSignIn = <TError = void, TContext = unknown>(
  * @summary Refresh access token using the refresh token cookie
  */
 export const refreshToken = (signal?: AbortSignal) => {
-  return orvalHttpClient<AuthResponse>({
+  return orvalHttpClient<unknown>({
     url: `/auth/refresh`,
     method: 'POST',
     signal,
