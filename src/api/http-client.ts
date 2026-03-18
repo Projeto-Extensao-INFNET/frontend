@@ -13,10 +13,13 @@ import { env } from '@/shared/env';
 
 const BASE_URL = env.VITE_BASE_URL;
 
+// ?? [ ] => usar o zustand para deslogar o usuário automaticamente quando o token expirar?
+// TODO [ ] => validar se realmente o token é revalidado
+// TODO [ ] => validar se o access token é repassado automaticamente nos headers
+
 // HTTP client customizado
 export class httpClient implements IHttpClient {
   public api: AxiosInstance;
-  // private isRefreshing = false;
 
   public constructor() {
     this.api = axios.create({
