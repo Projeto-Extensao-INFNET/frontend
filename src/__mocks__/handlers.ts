@@ -1,4 +1,10 @@
-import { getListUsersMockHandler } from '@/api/http/generated/api.msw';
+import {
+  getListUsersMockHandler,
+  getSignUpMockHandler,
+  // getSignInMockHandler,
+} from '@/api/http/generated/api.msw';
+
+// TODO [ ] => corrigir/validar mocks do backend para o ambiente de testes
 
 export const handlers = () => [
   getListUsersMockHandler({
@@ -14,4 +20,21 @@ export const handlers = () => [
       limit: 10,
     },
   }),
+  getSignUpMockHandler({
+    data: {
+      name: 'Teste',
+      email: 'teste@test.com',
+      password: '12345678',
+      birthDate: '2005-09-26T00:00:00.000Z',
+      role: 'PATIENT',
+      documentType: 'CPF',
+      document: '99999999999',
+    },
+  }),
+  // getSignInMockHandler({
+  //   data: {
+  //     email: 'teste@test.com',
+  //     password: '12345678',
+  //   },
+  // }),
 ];
