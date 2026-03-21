@@ -15,6 +15,10 @@
 
 [ ] - Corrigir a store de Auth para retornar dados do backend corretamente e talvez adicionar novos métodos
 
+## ShadcnUI
+
+[ ] - Remover a dependência do ShadcnUI para criar componentes próprios (ou reduzir para usar **minimamente**)
+
 ## Outros TODOs espalhados pelo código
 
 [ ] - Feito
