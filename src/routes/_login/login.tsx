@@ -1,10 +1,7 @@
-import { Login } from '@/presentation/view-models/login';
+import { LoginPage } from '@/pages/login/page';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_login/login')({
-  component: RouteComponent,
+  component: LoginPage,
+  context: () => ({ title: 'Login' }),
 });
-
-function RouteComponent() {
-  return <Login />;
-}

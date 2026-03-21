@@ -1,10 +1,9 @@
-import { Register } from '@/presentation/view-models/register';
+import { RegisterPage } from '@/pages/register/page';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_register/register')({
-  component: RouteComponent,
+  component: RegisterPage,
+  context: () => ({
+    title: 'Cadastro',
+  }),
 });
-
-function RouteComponent() {
-  return <Register />;
-}
