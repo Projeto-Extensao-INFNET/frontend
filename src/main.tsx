@@ -1,7 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { client } from '@lib/react-query.ts';
+import { TanStackQueryProvider } from '@/shared/integrations/tanstack-query/index.tsx';
 import { createRouter, RouterProvider } from '@tanstack/react-router';
 import { env } from '@shared/env';
 import '@styles/index.css';
@@ -26,9 +25,9 @@ declare module '@tanstack/react-router' {
 enableMSW().then(() => {
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
-      <QueryClientProvider client={client}>
+      <TanStackQueryProvider>
         <RouterProvider router={router} />
-      </QueryClientProvider>
+      </TanStackQueryProvider>
     </StrictMode>,
   );
 });
