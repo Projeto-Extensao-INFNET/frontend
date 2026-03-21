@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { useLoginModel } from './useLoginModel';
-import { Form } from '@/presentation/components/ui/form';
+import { Form } from '@/presentation/components/form';
 import { PageTitle } from '@/presentation/components/page-title';
 import { Button } from '@/presentation/components/ui/button';
 
