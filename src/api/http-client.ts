@@ -8,7 +8,7 @@ import axios, {
   type AxiosInstance,
   type AxiosRequestConfig,
 } from 'axios';
-import { INTERNAL_SERVER_ERROR } from '@/shared/constants/errors';
+import { INTERNAL_SERVER_ERROR } from '@/shared/errors';
 import { env } from '@/shared/env';
 
 const BASE_URL = env.VITE_BASE_URL;
