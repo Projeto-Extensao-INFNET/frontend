@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSignUp } from '@/api/http/generated/api';
-import { registerFormSchema, type RegisterFormSchema } from './schema';
+import { registerFormSchema, type RegisterFormSchema } from './register.schema';
 import { useNavigate } from '@tanstack/react-router';
 
 export const useRegisterModel = () => {
