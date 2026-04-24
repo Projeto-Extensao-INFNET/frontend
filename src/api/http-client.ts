@@ -1,9 +1,8 @@
 import axios, { type AxiosError, type AxiosInstance } from 'axios';
 import { type HttpRequest, type IHttpClient } from './http-client.types';
-import { INTERNAL_SERVER_ERROR } from '@/shared/errors';
-import { env } from '@/shared/env';
 
-const BASE_URL = env.VITE_BASE_URL;
+import { INTERNAL_SERVER_ERROR } from '@/shared/errors';
+import { BASE_URL } from '@/shared/constants';
 
 // HTTP client customizado
 export class HttpClient implements IHttpClient {

@@ -2,11 +2,8 @@ import axios, { type AxiosError, type AxiosRequestConfig } from 'axios';
 
 import { INTERNAL_SERVER_ERROR } from '@/shared/errors';
 
-import { env } from '@/shared/env';
-
 import type { HttpMethod } from './http-client.types';
-
-const BASE_URL = env.VITE_BASE_URL;
+import { BASE_URL } from '@/shared/constants';
 
 const api = axios.create({
   baseURL: BASE_URL,
