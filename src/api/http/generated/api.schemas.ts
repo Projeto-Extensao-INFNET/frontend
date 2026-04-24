@@ -54,7 +54,7 @@ export interface SignInDto {
 /**
  * Dados do usuário autenticado.
  */
-export type SignInResponseDtoData = { [key: string]: unknown };
+export type SignInResponseDtoPayload = { [key: string]: unknown };
 
 export interface SignInResponseDto {
   /** JWT token de acesso. */
@@ -62,7 +62,7 @@ export interface SignInResponseDto {
   /** JWT token de refresh. */
   refreshToken: string;
   /** Dados do usuário autenticado. */
-  data: SignInResponseDtoData;
+  payload: SignInResponseDtoPayload;
 }
 
 export interface LogoutResponse {
@@ -109,36 +109,19 @@ export interface CreateAppointmentDto {
   isConfirmed: boolean;
 }
 
-export type DeleteUserProfile200 = {
-  status?: number;
-  message?: string;
-};
-
 export type ListUsersParams = {
   limit?: number;
   page?: number;
 };
 
-export type ListUsers200DataItem = {
-  id?: string;
-  name?: string;
-  email?: string;
-  birthDate?: string;
-  avatar?: string;
-  role?: string;
-  document?: string;
+export type UploadUserAvatarBody = {
+  /** Avatar image file */
+  avatar: Blob;
 };
 
-export type ListUsers200Meta = {
-  total_items?: number;
-  total_pages?: number;
-  page?: number;
-  limit?: number;
-};
-
-export type ListUsers200 = {
-  data?: ListUsers200DataItem[];
-  meta?: ListUsers200Meta;
+export type DeleteProfile204 = {
+  status?: number;
+  message?: string;
 };
 
 export type ListProfessionalsParams = {
@@ -166,38 +149,4 @@ export type ListProfessionals200Meta = {
 export type ListProfessionals200 = {
   data?: ListProfessionals200DataItem[];
   meta?: ListProfessionals200Meta;
-};
-
-export type GetAppointment200Item = {
-  id?: string;
-  scheduleId?: string;
-  userId?: string;
-  specialtyId?: string;
-  typeOfTreatmentId?: string;
-  isAvailable?: boolean;
-  isConfirmed?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-};
-
-export type UpdateAppointment200 = {
-  id?: string;
-  scheduleId?: string;
-  userId?: string;
-  specialtyId?: string;
-  typeOfTreatmentId?: string;
-  isAvailable?: boolean;
-  isConfirmed?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
-};
-
-export type HealthCheck200 = {
-  status?: string;
-  timestamp?: string;
-};
-
-export type UploadUserAvatarBody = {
-  /** Avatar image file */
-  avatar: Blob;
 };

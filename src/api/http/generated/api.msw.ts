@@ -11,15 +11,11 @@ import { HttpResponse, delay, http } from 'msw';
 import type { RequestHandlerOptions } from 'msw';
 
 import type {
-  DeleteUserProfile200,
-  GetAppointment200Item,
+  DeleteProfile204,
   GetUserProfileResponse,
-  HealthCheck200,
   ListProfessionals200,
-  ListUsers200,
   LogoutResponse,
   SignInResponseDto,
-  UpdateAppointment200,
 } from './api.schemas';
 
 export const getSignInResponseMock = (
@@ -27,7 +23,7 @@ export const getSignInResponseMock = (
 ): SignInResponseDto => ({
   accessToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
   refreshToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  data: {},
+  payload: {},
   ...overrideResponse,
 });
 
@@ -36,7 +32,7 @@ export const getSignInResponseMock201 = (
 ): SignInResponseDto => ({
   accessToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
   refreshToken: faker.string.alpha({ length: { min: 10, max: 20 } }),
-  data: {},
+  payload: {},
   ...overrideResponse,
 });
 
@@ -106,9 +102,9 @@ export const getUpdateUserProfileResponseMock200 = (
   ...overrideResponse,
 });
 
-export const getDeleteUserProfileResponseMock = (
-  overrideResponse: Partial<Extract<DeleteUserProfile200, object>> = {},
-): DeleteUserProfile200 => ({
+export const getDeleteProfileResponseMock = (
+  overrideResponse: Partial<Extract<DeleteProfile204, object>> = {},
+): DeleteProfile204 => ({
   status: faker.helpers.arrayElement([
     faker.number.float({ fractionDigits: 2 }),
     undefined,
@@ -120,129 +116,15 @@ export const getDeleteUserProfileResponseMock = (
   ...overrideResponse,
 });
 
-export const getDeleteUserProfileResponseMock200 = (
-  overrideResponse: Partial<Extract<DeleteUserProfile200, object>> = {},
-): DeleteUserProfile200 => ({
+export const getDeleteProfileResponseMock204 = (
+  overrideResponse: Partial<Extract<DeleteProfile204, object>> = {},
+): DeleteProfile204 => ({
   status: faker.helpers.arrayElement([
     faker.number.float({ fractionDigits: 2 }),
     undefined,
   ]),
   message: faker.helpers.arrayElement([
     faker.string.alpha({ length: { min: 10, max: 20 } }),
-    undefined,
-  ]),
-  ...overrideResponse,
-});
-
-export const getListUsersResponseMock = (
-  overrideResponse: Partial<Extract<ListUsers200, object>> = {},
-): ListUsers200 => ({
-  data: faker.helpers.arrayElement([
-    Array.from(
-      { length: faker.number.int({ min: 1, max: 10 }) },
-      (_, i) => i + 1,
-    ).map(() => ({
-      id: faker.helpers.arrayElement([faker.string.uuid(), undefined]),
-      name: faker.helpers.arrayElement([
-        faker.string.alpha({ length: { min: 10, max: 20 } }),
-        undefined,
-      ]),
-      email: faker.helpers.arrayElement([faker.internet.email(), undefined]),
-      birthDate: faker.helpers.arrayElement([
-        faker.date.past().toISOString().slice(0, 19) + 'Z',
-        undefined,
-      ]),
-      avatar: faker.helpers.arrayElement([
-        faker.string.alpha({ length: { min: 10, max: 20 } }),
-        undefined,
-      ]),
-      role: faker.helpers.arrayElement([
-        faker.string.alpha({ length: { min: 10, max: 20 } }),
-        undefined,
-      ]),
-      document: faker.helpers.arrayElement([
-        faker.string.alpha({ length: { min: 10, max: 20 } }),
-        undefined,
-      ]),
-    })),
-    undefined,
-  ]),
-  meta: faker.helpers.arrayElement([
-    {
-      total_items: faker.helpers.arrayElement([
-        faker.number.float({ fractionDigits: 2 }),
-        undefined,
-      ]),
-      total_pages: faker.helpers.arrayElement([
-        faker.number.float({ fractionDigits: 2 }),
-        undefined,
-      ]),
-      page: faker.helpers.arrayElement([
-        faker.number.float({ fractionDigits: 2 }),
-        undefined,
-      ]),
-      limit: faker.helpers.arrayElement([
-        faker.number.float({ fractionDigits: 2 }),
-        undefined,
-      ]),
-    },
-    undefined,
-  ]),
-  ...overrideResponse,
-});
-
-export const getListUsersResponseMock200 = (
-  overrideResponse: Partial<Extract<ListUsers200, object>> = {},
-): ListUsers200 => ({
-  data: faker.helpers.arrayElement([
-    Array.from(
-      { length: faker.number.int({ min: 1, max: 10 }) },
-      (_, i) => i + 1,
-    ).map(() => ({
-      id: faker.helpers.arrayElement([faker.string.uuid(), undefined]),
-      name: faker.helpers.arrayElement([
-        faker.string.alpha({ length: { min: 10, max: 20 } }),
-        undefined,
-      ]),
-      email: faker.helpers.arrayElement([faker.internet.email(), undefined]),
-      birthDate: faker.helpers.arrayElement([
-        faker.date.past().toISOString().slice(0, 19) + 'Z',
-        undefined,
-      ]),
-      avatar: faker.helpers.arrayElement([
-        faker.string.alpha({ length: { min: 10, max: 20 } }),
-        undefined,
-      ]),
-      role: faker.helpers.arrayElement([
-        faker.string.alpha({ length: { min: 10, max: 20 } }),
-        undefined,
-      ]),
-      document: faker.helpers.arrayElement([
-        faker.string.alpha({ length: { min: 10, max: 20 } }),
-        undefined,
-      ]),
-    })),
-    undefined,
-  ]),
-  meta: faker.helpers.arrayElement([
-    {
-      total_items: faker.helpers.arrayElement([
-        faker.number.float({ fractionDigits: 2 }),
-        undefined,
-      ]),
-      total_pages: faker.helpers.arrayElement([
-        faker.number.float({ fractionDigits: 2 }),
-        undefined,
-      ]),
-      page: faker.helpers.arrayElement([
-        faker.number.float({ fractionDigits: 2 }),
-        undefined,
-      ]),
-      limit: faker.helpers.arrayElement([
-        faker.number.float({ fractionDigits: 2 }),
-        undefined,
-      ]),
-    },
     undefined,
   ]),
   ...overrideResponse,
@@ -357,192 +239,6 @@ export const getListProfessionalsResponseMock200 = (
         undefined,
       ]),
     },
-    undefined,
-  ]),
-  ...overrideResponse,
-});
-
-export const getGetAppointmentResponseMock = (): GetAppointment200Item[] =>
-  Array.from(
-    { length: faker.number.int({ min: 1, max: 10 }) },
-    (_, i) => i + 1,
-  ).map(() => ({
-    id: faker.helpers.arrayElement([faker.string.uuid(), undefined]),
-    scheduleId: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      undefined,
-    ]),
-    userId: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      undefined,
-    ]),
-    specialtyId: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      undefined,
-    ]),
-    typeOfTreatmentId: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      undefined,
-    ]),
-    isAvailable: faker.helpers.arrayElement([
-      faker.datatype.boolean(),
-      undefined,
-    ]),
-    isConfirmed: faker.helpers.arrayElement([
-      faker.datatype.boolean(),
-      undefined,
-    ]),
-    createdAt: faker.helpers.arrayElement([
-      faker.date.past().toISOString().slice(0, 19) + 'Z',
-      undefined,
-    ]),
-    updatedAt: faker.helpers.arrayElement([
-      faker.date.past().toISOString().slice(0, 19) + 'Z',
-      undefined,
-    ]),
-  }));
-
-export const getGetAppointmentResponseMock200 = (): GetAppointment200Item[] =>
-  Array.from(
-    { length: faker.number.int({ min: 1, max: 10 }) },
-    (_, i) => i + 1,
-  ).map(() => ({
-    id: faker.helpers.arrayElement([faker.string.uuid(), undefined]),
-    scheduleId: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      undefined,
-    ]),
-    userId: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      undefined,
-    ]),
-    specialtyId: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      undefined,
-    ]),
-    typeOfTreatmentId: faker.helpers.arrayElement([
-      faker.string.alpha({ length: { min: 10, max: 20 } }),
-      undefined,
-    ]),
-    isAvailable: faker.helpers.arrayElement([
-      faker.datatype.boolean(),
-      undefined,
-    ]),
-    isConfirmed: faker.helpers.arrayElement([
-      faker.datatype.boolean(),
-      undefined,
-    ]),
-    createdAt: faker.helpers.arrayElement([
-      faker.date.past().toISOString().slice(0, 19) + 'Z',
-      undefined,
-    ]),
-    updatedAt: faker.helpers.arrayElement([
-      faker.date.past().toISOString().slice(0, 19) + 'Z',
-      undefined,
-    ]),
-  }));
-
-export const getUpdateAppointmentResponseMock = (
-  overrideResponse: Partial<Extract<UpdateAppointment200, object>> = {},
-): UpdateAppointment200 => ({
-  id: faker.helpers.arrayElement([faker.string.uuid(), undefined]),
-  scheduleId: faker.helpers.arrayElement([
-    faker.string.alpha({ length: { min: 10, max: 20 } }),
-    undefined,
-  ]),
-  userId: faker.helpers.arrayElement([
-    faker.string.alpha({ length: { min: 10, max: 20 } }),
-    undefined,
-  ]),
-  specialtyId: faker.helpers.arrayElement([
-    faker.string.alpha({ length: { min: 10, max: 20 } }),
-    undefined,
-  ]),
-  typeOfTreatmentId: faker.helpers.arrayElement([
-    faker.string.alpha({ length: { min: 10, max: 20 } }),
-    undefined,
-  ]),
-  isAvailable: faker.helpers.arrayElement([
-    faker.datatype.boolean(),
-    undefined,
-  ]),
-  isConfirmed: faker.helpers.arrayElement([
-    faker.datatype.boolean(),
-    undefined,
-  ]),
-  createdAt: faker.helpers.arrayElement([
-    faker.date.past().toISOString().slice(0, 19) + 'Z',
-    undefined,
-  ]),
-  updatedAt: faker.helpers.arrayElement([
-    faker.date.past().toISOString().slice(0, 19) + 'Z',
-    undefined,
-  ]),
-  ...overrideResponse,
-});
-
-export const getUpdateAppointmentResponseMock200 = (
-  overrideResponse: Partial<Extract<UpdateAppointment200, object>> = {},
-): UpdateAppointment200 => ({
-  id: faker.helpers.arrayElement([faker.string.uuid(), undefined]),
-  scheduleId: faker.helpers.arrayElement([
-    faker.string.alpha({ length: { min: 10, max: 20 } }),
-    undefined,
-  ]),
-  userId: faker.helpers.arrayElement([
-    faker.string.alpha({ length: { min: 10, max: 20 } }),
-    undefined,
-  ]),
-  specialtyId: faker.helpers.arrayElement([
-    faker.string.alpha({ length: { min: 10, max: 20 } }),
-    undefined,
-  ]),
-  typeOfTreatmentId: faker.helpers.arrayElement([
-    faker.string.alpha({ length: { min: 10, max: 20 } }),
-    undefined,
-  ]),
-  isAvailable: faker.helpers.arrayElement([
-    faker.datatype.boolean(),
-    undefined,
-  ]),
-  isConfirmed: faker.helpers.arrayElement([
-    faker.datatype.boolean(),
-    undefined,
-  ]),
-  createdAt: faker.helpers.arrayElement([
-    faker.date.past().toISOString().slice(0, 19) + 'Z',
-    undefined,
-  ]),
-  updatedAt: faker.helpers.arrayElement([
-    faker.date.past().toISOString().slice(0, 19) + 'Z',
-    undefined,
-  ]),
-  ...overrideResponse,
-});
-
-export const getHealthCheckResponseMock = (
-  overrideResponse: Partial<Extract<HealthCheck200, object>> = {},
-): HealthCheck200 => ({
-  status: faker.helpers.arrayElement([
-    faker.string.alpha({ length: { min: 10, max: 20 } }),
-    undefined,
-  ]),
-  timestamp: faker.helpers.arrayElement([
-    faker.date.past().toISOString().slice(0, 19) + 'Z',
-    undefined,
-  ]),
-  ...overrideResponse,
-});
-
-export const getHealthCheckResponseMock200 = (
-  overrideResponse: Partial<Extract<HealthCheck200, object>> = {},
-): HealthCheck200 => ({
-  status: faker.helpers.arrayElement([
-    faker.string.alpha({ length: { min: 10, max: 20 } }),
-    undefined,
-  ]),
-  timestamp: faker.helpers.arrayElement([
-    faker.date.past().toISOString().slice(0, 19) + 'Z',
     undefined,
   ]),
   ...overrideResponse,
@@ -850,6 +546,204 @@ export const getLogoutMockHandler401 = (
   );
 };
 
+export const getListUsersMockHandler = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/accounts/users',
+    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getListUsersMockHandler200 = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/accounts/users',
+    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getListUsersMockHandler401 = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/accounts/users',
+    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 401 });
+    },
+    options,
+  );
+};
+
+export const getListUsersMockHandler404 = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/accounts/users',
+    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 404 });
+    },
+    options,
+  );
+};
+
+export const getUploadUserAvatarMockHandler = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/accounts/me/avatar',
+    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getUploadUserAvatarMockHandler201 = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/accounts/me/avatar',
+    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 201 });
+    },
+    options,
+  );
+};
+
+export const getUploadUserAvatarMockHandler401 = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/accounts/me/avatar',
+    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 401 });
+    },
+    options,
+  );
+};
+
+export const getUploadUserAvatarMockHandler404 = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/accounts/me/avatar',
+    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 404 });
+    },
+    options,
+  );
+};
+
+export const getUploadUserAvatarMockHandler422 = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.post(
+    '*/accounts/me/avatar',
+    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 422 });
+    },
+    options,
+  );
+};
+
 export const getGetUserProfileMockHandler = (
   overrideResponse?:
     | GetUserProfileResponse
@@ -1020,12 +914,12 @@ export const getUpdateUserProfileMockHandler401 = (
   );
 };
 
-export const getDeleteUserProfileMockHandler = (
+export const getDeleteProfileMockHandler = (
   overrideResponse?:
-    | DeleteUserProfile200
+    | DeleteProfile204
     | ((
         info: Parameters<Parameters<typeof http.delete>[1]>[0],
-      ) => Promise<DeleteUserProfile200> | DeleteUserProfile200),
+      ) => Promise<DeleteProfile204> | DeleteProfile204),
   options?: RequestHandlerOptions,
 ) => {
   return http.delete(
@@ -1038,20 +932,20 @@ export const getDeleteUserProfileMockHandler = (
           ? typeof overrideResponse === 'function'
             ? await overrideResponse(info)
             : overrideResponse
-          : getDeleteUserProfileResponseMock(),
-        { status: 200 },
+          : getDeleteProfileResponseMock(),
+        { status: 204 },
       );
     },
     options,
   );
 };
 
-export const getDeleteUserProfileMockHandler200 = (
+export const getDeleteProfileMockHandler204 = (
   overrideResponse?:
-    | DeleteUserProfile200
+    | DeleteProfile204
     | ((
         info: Parameters<Parameters<typeof http.delete>[1]>[0],
-      ) => Promise<DeleteUserProfile200> | DeleteUserProfile200),
+      ) => Promise<DeleteProfile204> | DeleteProfile204),
   options?: RequestHandlerOptions,
 ) => {
   return http.delete(
@@ -1064,15 +958,15 @@ export const getDeleteUserProfileMockHandler200 = (
           ? typeof overrideResponse === 'function'
             ? await overrideResponse(info)
             : overrideResponse
-          : getDeleteUserProfileResponseMock200(),
-        { status: 200 },
+          : getDeleteProfileResponseMock204(),
+        { status: 204 },
       );
     },
     options,
   );
 };
 
-export const getDeleteUserProfileMockHandler401 = (
+export const getDeleteProfileMockHandler401 = (
   overrideResponse?:
     | void
     | ((
@@ -1089,102 +983,6 @@ export const getDeleteUserProfileMockHandler401 = (
       }
 
       return new HttpResponse(null, { status: 401 });
-    },
-    options,
-  );
-};
-
-export const getListUsersMockHandler = (
-  overrideResponse?:
-    | ListUsers200
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<ListUsers200> | ListUsers200),
-  options?: RequestHandlerOptions,
-) => {
-  return http.get(
-    '*/accounts/users',
-    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
-      await delay(1000);
-
-      return HttpResponse.json(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getListUsersResponseMock(),
-        { status: 200 },
-      );
-    },
-    options,
-  );
-};
-
-export const getListUsersMockHandler200 = (
-  overrideResponse?:
-    | ListUsers200
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<ListUsers200> | ListUsers200),
-  options?: RequestHandlerOptions,
-) => {
-  return http.get(
-    '*/accounts/users',
-    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
-      await delay(1000);
-
-      return HttpResponse.json(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getListUsersResponseMock200(),
-        { status: 200 },
-      );
-    },
-    options,
-  );
-};
-
-export const getListUsersMockHandler401 = (
-  overrideResponse?:
-    | void
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<void> | void),
-  options?: RequestHandlerOptions,
-) => {
-  return http.get(
-    '*/accounts/users',
-    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
-      await delay(1000);
-      if (typeof overrideResponse === 'function') {
-        await overrideResponse(info);
-      }
-
-      return new HttpResponse(null, { status: 401 });
-    },
-    options,
-  );
-};
-
-export const getListUsersMockHandler404 = (
-  overrideResponse?:
-    | void
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<void> | void),
-  options?: RequestHandlerOptions,
-) => {
-  return http.get(
-    '*/accounts/users',
-    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
-      await delay(1000);
-      if (typeof overrideResponse === 'function') {
-        await overrideResponse(info);
-      }
-
-      return new HttpResponse(null, { status: 404 });
     },
     options,
   );
@@ -1259,154 +1057,6 @@ export const getListProfessionalsMockHandler401 = (
       }
 
       return new HttpResponse(null, { status: 401 });
-    },
-    options,
-  );
-};
-
-export const getGetAppointmentMockHandler = (
-  overrideResponse?:
-    | GetAppointment200Item[]
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<GetAppointment200Item[]> | GetAppointment200Item[]),
-  options?: RequestHandlerOptions,
-) => {
-  return http.get(
-    '*/appointments',
-    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
-      await delay(1000);
-
-      return HttpResponse.json(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getGetAppointmentResponseMock(),
-        { status: 200 },
-      );
-    },
-    options,
-  );
-};
-
-export const getGetAppointmentMockHandler200 = (
-  overrideResponse?:
-    | GetAppointment200Item[]
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<GetAppointment200Item[]> | GetAppointment200Item[]),
-  options?: RequestHandlerOptions,
-) => {
-  return http.get(
-    '*/appointments',
-    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
-      await delay(1000);
-
-      return HttpResponse.json(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getGetAppointmentResponseMock200(),
-        { status: 200 },
-      );
-    },
-    options,
-  );
-};
-
-export const getUpdateAppointmentMockHandler = (
-  overrideResponse?:
-    | UpdateAppointment200
-    | ((
-        info: Parameters<Parameters<typeof http.put>[1]>[0],
-      ) => Promise<UpdateAppointment200> | UpdateAppointment200),
-  options?: RequestHandlerOptions,
-) => {
-  return http.put(
-    '*/appointments',
-    async (info: Parameters<Parameters<typeof http.put>[1]>[0]) => {
-      await delay(1000);
-
-      return HttpResponse.json(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getUpdateAppointmentResponseMock(),
-        { status: 200 },
-      );
-    },
-    options,
-  );
-};
-
-export const getUpdateAppointmentMockHandler200 = (
-  overrideResponse?:
-    | UpdateAppointment200
-    | ((
-        info: Parameters<Parameters<typeof http.put>[1]>[0],
-      ) => Promise<UpdateAppointment200> | UpdateAppointment200),
-  options?: RequestHandlerOptions,
-) => {
-  return http.put(
-    '*/appointments',
-    async (info: Parameters<Parameters<typeof http.put>[1]>[0]) => {
-      await delay(1000);
-
-      return HttpResponse.json(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getUpdateAppointmentResponseMock200(),
-        { status: 200 },
-      );
-    },
-    options,
-  );
-};
-
-export const getCancelAppointmentMockHandler = (
-  overrideResponse?:
-    | void
-    | ((
-        info: Parameters<Parameters<typeof http.patch>[1]>[0],
-      ) => Promise<void> | void),
-  options?: RequestHandlerOptions,
-) => {
-  return http.patch(
-    '*/appointments',
-    async (info: Parameters<Parameters<typeof http.patch>[1]>[0]) => {
-      await delay(1000);
-      if (typeof overrideResponse === 'function') {
-        await overrideResponse(info);
-      }
-
-      return new HttpResponse(null, { status: 204 });
-    },
-    options,
-  );
-};
-
-export const getCancelAppointmentMockHandler204 = (
-  overrideResponse?:
-    | void
-    | ((
-        info: Parameters<Parameters<typeof http.patch>[1]>[0],
-      ) => Promise<void> | void),
-  options?: RequestHandlerOptions,
-) => {
-  return http.patch(
-    '*/appointments',
-    async (info: Parameters<Parameters<typeof http.patch>[1]>[0]) => {
-      await delay(1000);
-      if (typeof overrideResponse === 'function') {
-        await overrideResponse(info);
-      }
-
-      return new HttpResponse(null, { status: 204 });
     },
     options,
   );
@@ -1522,27 +1172,155 @@ export const getCreateAppointmentMockHandler409 = (
   );
 };
 
-export const getHealthCheckMockHandler = (
+export const getGetAppointmentMockHandler = (
   overrideResponse?:
-    | HealthCheck200
+    | void
     | ((
         info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<HealthCheck200> | HealthCheck200),
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/appointments',
+    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getGetAppointmentMockHandler200 = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.get(
+    '*/appointments',
+    async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getUpdateAppointmentMockHandler = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.put>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.put(
+    '*/appointments',
+    async (info: Parameters<Parameters<typeof http.put>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getUpdateAppointmentMockHandler200 = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.put>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.put(
+    '*/appointments',
+    async (info: Parameters<Parameters<typeof http.put>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 200 });
+    },
+    options,
+  );
+};
+
+export const getCancelAppointmentMockHandler = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.patch>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/appointments',
+    async (info: Parameters<Parameters<typeof http.patch>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 204 });
+    },
+    options,
+  );
+};
+
+export const getCancelAppointmentMockHandler204 = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.patch>[1]>[0],
+      ) => Promise<void> | void),
+  options?: RequestHandlerOptions,
+) => {
+  return http.patch(
+    '*/appointments',
+    async (info: Parameters<Parameters<typeof http.patch>[1]>[0]) => {
+      await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
+
+      return new HttpResponse(null, { status: 204 });
+    },
+    options,
+  );
+};
+
+export const getHealthCheckMockHandler = (
+  overrideResponse?:
+    | void
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<void> | void),
   options?: RequestHandlerOptions,
 ) => {
   return http.get(
     '*/health',
     async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
       await delay(1000);
+      if (typeof overrideResponse === 'function') {
+        await overrideResponse(info);
+      }
 
-      return HttpResponse.json(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getHealthCheckResponseMock(),
-        { status: 200 },
-      );
+      return new HttpResponse(null, { status: 200 });
     },
     options,
   );
@@ -1550,135 +1328,21 @@ export const getHealthCheckMockHandler = (
 
 export const getHealthCheckMockHandler200 = (
   overrideResponse?:
-    | HealthCheck200
+    | void
     | ((
         info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<HealthCheck200> | HealthCheck200),
+      ) => Promise<void> | void),
   options?: RequestHandlerOptions,
 ) => {
   return http.get(
     '*/health',
     async (info: Parameters<Parameters<typeof http.get>[1]>[0]) => {
       await delay(1000);
-
-      return HttpResponse.json(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getHealthCheckResponseMock200(),
-        { status: 200 },
-      );
-    },
-    options,
-  );
-};
-
-export const getUploadUserAvatarMockHandler = (
-  overrideResponse?:
-    | void
-    | ((
-        info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => Promise<void> | void),
-  options?: RequestHandlerOptions,
-) => {
-  return http.post(
-    '*/accounts/me/avatar',
-    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
-      await delay(1000);
       if (typeof overrideResponse === 'function') {
         await overrideResponse(info);
       }
 
-      return new HttpResponse(null, { status: 201 });
-    },
-    options,
-  );
-};
-
-export const getUploadUserAvatarMockHandler201 = (
-  overrideResponse?:
-    | void
-    | ((
-        info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => Promise<void> | void),
-  options?: RequestHandlerOptions,
-) => {
-  return http.post(
-    '*/accounts/me/avatar',
-    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
-      await delay(1000);
-      if (typeof overrideResponse === 'function') {
-        await overrideResponse(info);
-      }
-
-      return new HttpResponse(null, { status: 201 });
-    },
-    options,
-  );
-};
-
-export const getUploadUserAvatarMockHandler401 = (
-  overrideResponse?:
-    | void
-    | ((
-        info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => Promise<void> | void),
-  options?: RequestHandlerOptions,
-) => {
-  return http.post(
-    '*/accounts/me/avatar',
-    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
-      await delay(1000);
-      if (typeof overrideResponse === 'function') {
-        await overrideResponse(info);
-      }
-
-      return new HttpResponse(null, { status: 401 });
-    },
-    options,
-  );
-};
-
-export const getUploadUserAvatarMockHandler404 = (
-  overrideResponse?:
-    | void
-    | ((
-        info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => Promise<void> | void),
-  options?: RequestHandlerOptions,
-) => {
-  return http.post(
-    '*/accounts/me/avatar',
-    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
-      await delay(1000);
-      if (typeof overrideResponse === 'function') {
-        await overrideResponse(info);
-      }
-
-      return new HttpResponse(null, { status: 404 });
-    },
-    options,
-  );
-};
-
-export const getUploadUserAvatarMockHandler422 = (
-  overrideResponse?:
-    | void
-    | ((
-        info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => Promise<void> | void),
-  options?: RequestHandlerOptions,
-) => {
-  return http.post(
-    '*/accounts/me/avatar',
-    async (info: Parameters<Parameters<typeof http.post>[1]>[0]) => {
-      await delay(1000);
-      if (typeof overrideResponse === 'function') {
-        await overrideResponse(info);
-      }
-
-      return new HttpResponse(null, { status: 422 });
+      return new HttpResponse(null, { status: 200 });
     },
     options,
   );
@@ -1688,15 +1352,15 @@ export const getAPIProjetoDeExtensaoMock = () => [
   getSignInMockHandler(),
   getRefreshTokenMockHandler(),
   getLogoutMockHandler(),
+  getListUsersMockHandler(),
+  getUploadUserAvatarMockHandler(),
   getGetUserProfileMockHandler(),
   getUpdateUserProfileMockHandler(),
-  getDeleteUserProfileMockHandler(),
-  getListUsersMockHandler(),
+  getDeleteProfileMockHandler(),
   getListProfessionalsMockHandler(),
+  getCreateAppointmentMockHandler(),
   getGetAppointmentMockHandler(),
   getUpdateAppointmentMockHandler(),
   getCancelAppointmentMockHandler(),
-  getCreateAppointmentMockHandler(),
   getHealthCheckMockHandler(),
-  getUploadUserAvatarMockHandler(),
 ];
