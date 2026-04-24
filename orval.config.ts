@@ -2,7 +2,7 @@ import { defineConfig } from 'orval';
 
 export default defineConfig({
   api: {
-    input: 'http://localhost:3333/api-json',
+    input: 'http://localhost:3333/docs-json',
     output: {
       namingConvention: 'kebab-case',
       mode: 'split',
@@ -11,8 +11,8 @@ export default defineConfig({
       httpClient: 'axios',
       override: {
         mutator: {
-          path: 'src/api/http-client.ts',
-          name: 'orvalHttpClient',
+          path: 'src/api/orval.mutator.ts',
+          name: 'OrvalMutator',
         },
       },
       clean: true,
