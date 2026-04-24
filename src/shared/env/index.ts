@@ -8,9 +8,13 @@ export const env = createEnv({
   clientPrefix: 'VITE_',
   client: {
     VITE_ENV: z
-      .enum(['test', 'e2e', 'development', 'production'])
+      .enum(['test', 'e2e', 'development', 'production', 'CI'])
       .default('development'),
-    VITE_BASE_URL: z.string(),
+    VITE_BASE_API_URL: z.string().default('http://localhost:3333/api'),
+  },
+
+  shared: {
+    PORT: z.coerce.number().default(5173),
   },
 
   server: {},
