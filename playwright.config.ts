@@ -1,15 +1,18 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = process.env.PORT ?? '5173';
-const BASE_URL = `http://localhost:${PORT}`;
+import { env } from '@/shared/env';
+
+const PORT = env.PORT ?? '5173';
+const BASE_URL = env.VITE_BASE_API_URL ?? `http://localhost:${PORT}`;
+const CI_ENV = env.VITE_ENV === 'CI';
 
 export default defineConfig({
-  testDir: './e2e',
+  testDir: './src/__tests__/e2e',
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  expect: { timeout: process.env.CI ? 15000 : 5000 },
+  forbidOnly: !!CI_ENV,
+  retries: CI_ENV ? 2 : 0,
+  workers: CI_ENV ? 1 : undefined,
+  expect: { timeout: CI_ENV ? 15000 : 5000 },
   reporter: 'html',
   use: {
     baseURL: BASE_URL,
@@ -23,14 +26,14 @@ export default defineConfig({
     { name: 'webkit', use: { ...devices['Desktop Safari'] } },
   ],
   // webServer: {
-  //   command: process.env.CI ? 'pnpm start' : 'pnpm dev',
+  //   command: CI_ENV ? 'pnpm start' : 'pnpm dev',
   //   url: BASE_URL,
-  //   reuseExistingServer: !process.env.CI,
+  //   reuseExistingServer: !CI_ENV,
   //   timeout: 180 * 1000,
   //   env: {
   //     PORT,
-  //     ...(process.env.DATABASE_URL
-  //       ? { DATABASE_URL: process.env.DATABASE_URL }
+  //     ...(CI_ENVTABASE_URL
+  //       ? { DATABASE_URL: CI_ENVTABASE_URL }
   //       : {}),
   //   },
   // },
