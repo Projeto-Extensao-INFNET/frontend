@@ -1,45 +1,32 @@
-import {
-  type HttpMethod,
-  type HttpRequest,
-  type IHttpClient,
-} from './http-client.types';
-import axios, {
-  type AxiosError,
-  type AxiosInstance,
-  type AxiosRequestConfig,
-} from 'axios';
+import axios, { type AxiosError, type AxiosInstance } from 'axios';
+import { type HttpRequest, type IHttpClient } from './http-client.types';
 import { INTERNAL_SERVER_ERROR } from '@/shared/errors';
 import { env } from '@/shared/env';
 
 const BASE_URL = env.VITE_BASE_URL;
 
-// ?? [ ] => usar o zustand para deslogar o usuário automaticamente quando o token expirar?
-// TODO [ ] => validar se realmente o token é revalidado
-// TODO [ ] => validar se o access token é repassado automaticamente nos headers
-
 // HTTP client customizado
-export class httpClient implements IHttpClient {
-  public api: AxiosInstance;
+export class HttpClient implements IHttpClient {
+  constructor(private api: AxiosInstance = axios) {}
 
-  public constructor() {
-    this.api = axios.create({
-      baseURL: BASE_URL,
-      withCredentials: true, // cookies são enviados nas reqs pro backend
-    });
-    this.setupInterceptors();
+  static create(): IHttpClient {
+    return new HttpClient();
   }
 
-  public setupInterceptors() {}
-
-  async request<TResponse, TBody = unknown>(props: HttpRequest<TBody>) {
-    const { endpoint, method, body, headers } = props;
-
+  async request<TResponse, TBody = unknown>({
+    endpoint,
+    method,
+    headers,
+    body,
+    params,
+  }: HttpRequest<TBody>) {
     try {
       const { data } = await this.api.request<TResponse>({
-        url: endpoint,
+        url: `${BASE_URL}${endpoint}`,
         method,
-        data: body,
         headers,
+        data: body,
+        params,
       });
       return data;
     } catch (err) {
@@ -47,8 +34,9 @@ export class httpClient implements IHttpClient {
       console.error('HTTP ERROR', {
         message: error.message,
         code: error.code,
-        response: error.response,
-        config: error.config,
+        status: error.response?.status,
+        url: error.config?.url,
+        method: error.config?.method,
       });
       const status = error.response?.status || INTERNAL_SERVER_ERROR;
       const message = error.response?.data || error.message;
@@ -56,22 +44,3 @@ export class httpClient implements IHttpClient {
     }
   }
 }
-
-// Instância única para reutilização
-const client = new httpClient();
-
-// Função para o Orval usar o HTTP client customizado.
-export const orvalHttpClient = async <TResponse, TBody = unknown>(
-  config: AxiosRequestConfig,
-): Promise<TResponse> => {
-  const method = (config.method ?? 'get').toLowerCase() as HttpMethod;
-
-  const request: HttpRequest<TBody> = {
-    endpoint: String(config.url ?? env.VITE_BASE_URL),
-    method,
-    body: config.data as TBody,
-    headers: config.headers as Record<string, string> | undefined,
-  };
-
-  return client.request<TResponse, TBody>(request);
-};
