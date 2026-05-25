@@ -32,9 +32,15 @@
       "@styles/*": ["./src/styles/*"],
       "@assets/*": ["./src/assets/*"],
       "@helpers/*": ["./src/helpers/*"],
-      "@tests/*": ["src/__tests__/*"],
-      "@mocks/*": ["src/__mocks__/*"]
+      "@tests/*": ["test/*"],
+      "@mocks/*": ["test/__mocks__/*"]
     }
   },
-  "include": ["src", "orval.config.ts"]
+  "include": [
+    "src",
+    "orval.config.ts",
+    "playwright.config.ts",
+    "test/__mocks__",
+    "test"
+  ]
 }

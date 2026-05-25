@@ -7,8 +7,7 @@ import '@styles/index.css';
 
 const enableMSW = async () => {
   if (env.VITE_ENV === 'test') {
-    const { worker } = await import('@mocks/browser.ts');
-
+    const { worker } = await import('@tests/__mocks__/browser');
     return worker.start();
   }
 };

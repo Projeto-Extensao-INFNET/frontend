@@ -2,7 +2,7 @@ import {
   getListUsersMockHandler,
   getSignUpMockHandler,
   // getSignInMockHandler,
-} from '@/api/http/generated/api.msw';
+} from 'src/infra/api/http/generated/api.msw';
 
 // TODO [ ] => corrigir/validar mocks do backend para o ambiente de testes
 

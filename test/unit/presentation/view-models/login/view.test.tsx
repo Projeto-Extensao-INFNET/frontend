@@ -4,10 +4,10 @@ import {
   screen,
   userEvent,
   Wrapper,
-} from '@/__tests__/custom-render';
-import { navigateMock } from '../../../../../vitest.setup';
-import { LoginView } from '../login.view';
-import { useLoginModel } from '../useLoginModel';
+} from '@tests/utils/custom-render';
+import { navigateMock } from 'vitest.setup';
+import { LoginView } from '@/presentation/view-models/login/login.view';
+import { useLoginModel } from '@/presentation/view-models/login/useLoginModel';
 
 const sut = () => {
   const { result } = renderHook(() => useLoginModel(), {

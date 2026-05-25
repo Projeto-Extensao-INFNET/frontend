@@ -1,6 +1,6 @@
-import { useLoginModel } from '../useLoginModel';
-import { Wrapper, act, renderHook } from '@/__tests__/custom-render';
-import { navigateMock } from '../../../../../vitest.setup';
+import { navigateMock } from 'vitest.setup';
+import { useLoginModel } from '@presentation/view-models/login/useLoginModel';
+import { act, renderHook, Wrapper } from '@tests/utils/custom-render';
 
 describe('Login Model', () => {
   it.todo('should call onSubmit', () => {});
