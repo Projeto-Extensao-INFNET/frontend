@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { loginFormSchema, type LoginFormSchema } from './login.schema';
-import { useSignIn } from '@/api/http/generated/api';
+import { useSignIn } from '@/infra/api/http/generated/api';
 import { useNavigate } from '@tanstack/react-router';
-import type { SignInResponseDto } from '@/api/http/generated/api.schemas';
+import type { SignInResponseDto } from '@/infra/api/http/generated/api.schemas';
 
 export const useLoginModel = () => {
   const {
