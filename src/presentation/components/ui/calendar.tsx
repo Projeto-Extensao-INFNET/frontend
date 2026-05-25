@@ -16,6 +16,23 @@ import {
   ChevronDownIcon,
 } from 'lucide-react';
 
+/**
+ * Render a styled DayPicker calendar with opinionated defaults and customizable slots.
+ *
+ * The component wraps `react-day-picker`'s `DayPicker`, applying project-specific class names,
+ * navigation icons, caption formatting, and default subcomponent implementations while
+ * allowing overrides via standard `DayPicker` props.
+ *
+ * @param className - Additional root class names to apply to the calendar container
+ * @param classNames - Partial mapping of DayPicker slot classNames to merge with defaults
+ * @param showOutsideDays - Whether to show days from adjacent months; defaults to `true`
+ * @param captionLayout - Caption layout mode, either `'label'` or `'dropdown'`; defaults to `'label'`
+ * @param buttonVariant - Variant to use for navigation buttons (for the project's `Button` component)
+ * @param locale - Locale object passed to DayPicker and used for month formatting
+ * @param formatters - Additional date formatters to merge with the component's defaults
+ * @param components - Component overrides merged after the calendar's defaults
+ * @returns A configured DayPicker React element with the calendar UI
+ */
 function Calendar({
   className,
   classNames,
@@ -187,6 +204,19 @@ function Calendar({
   );
 }
 
+/**
+ * Render a calendar day as a styled Button with selection and range metadata.
+ *
+ * Renders a day cell using the project's Button component, auto-focuses when
+ * `modifiers.focused` becomes true, and sets `data-*` attributes that reflect
+ * selection and range state (`data-selected-single`, `data-range-start`,
+ * `data-range-end`, `data-range-middle`, `data-day`). Composes default slot
+ * class names with the provided `className` and forwards remaining DayButton
+ * props.
+ *
+ * @param locale - Optional partial locale; `locale.code` is used to format the `data-day` value
+ * @returns The rendered day button element
+ */
 function CalendarDayButton({
   className,
   day,

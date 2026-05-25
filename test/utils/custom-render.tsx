@@ -14,6 +14,13 @@ export const Wrapper: FC<{ children: ReactNode }> = ({ children }) => {
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 };
 
+/**
+ * Render a UI element with React Testing Library using the provided render options.
+ *
+ * @param ui - The element or HTML string to render.
+ * @param options - Render options forwarded to Testing Library; the `wrapper` option is not supported.
+ * @returns The render result object produced by React Testing Library.
+ */
 export function CustomRender(ui: UI, options: Options) {
   return render(ui as ReactElement, options);
 }

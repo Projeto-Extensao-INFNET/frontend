@@ -117,9 +117,14 @@ addEventListener('fetch', function (event) {
 })
 
 /**
- * @param {FetchEvent} event
- * @param {string} requestId
- * @param {number} requestInterceptedAt
+ * Process a fetch event, resolve the final Response to return, and notify the associated client about the response lifecycle.
+ *
+ * Sends a "RESPONSE" lifecycle message to the resolved main client when that client is active.
+ *
+ * @param {FetchEvent} event - The fetch event to handle.
+ * @param {string} requestId - A unique identifier for correlating request and response messages.
+ * @param {number} requestInterceptedAt - Timestamp (milliseconds since epoch) when the request was intercepted by the worker.
+ * @returns {Promise<Response>} The Response to be used for the fetch event.
  */
 async function handleRequest(event, requestId, requestInterceptedAt) {
   const client = await resolveMainClient(event)
@@ -202,12 +207,13 @@ async function resolveMainClient(event) {
 }
 
 /**
- * @param {FetchEvent} event
- * @param {Client | undefined} client
- * @param {string} requestId
- * @param {number} requestInterceptedAt
- * @returns {Promise<Response>}
- */
+ * Determine the appropriate Response for a fetch event by asking the client for a mock response or forwarding the request to network.
+ *
+ * @param {FetchEvent} event - The fetch event being handled.
+ * @param {Client | undefined} client - The client that initiated the request; when missing the request is forwarded to network.
+ * @param {string} requestId - A unique identifier used to correlate this request with client messages.
+ * @param {number} requestInterceptedAt - Epoch timestamp (milliseconds) when the request was intercepted; included in the payload sent to the client.
+ * @returns {Promise<Response>} The Response object to fulfill the fetch event.
 async function getResponse(event, client, requestId, requestInterceptedAt) {
   // Clone the request because it might've been already used
   // (i.e. its body has been read and sent to the client).
