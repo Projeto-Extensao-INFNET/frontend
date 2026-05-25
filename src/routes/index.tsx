@@ -1,12 +1,9 @@
-import { Login } from '@/presentation/view-models/login';
+import { LoginPage } from '@/pages/login/page';
 import { createFileRoute } from '@tanstack/react-router';
 
 // ?? [ ] => manter assim para ser a tela inicial do site? ou a de cadastro?
 
 export const Route = createFileRoute('/')({
-  component: RouteComponent,
+  component: LoginPage,
+  context: () => ({ title: 'Login' }),
 });
-
-function RouteComponent() {
-  return <Login />;
-}
