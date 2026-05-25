@@ -1,13 +1,15 @@
-import type { FC } from 'react';
+import * as React from 'react';
+import { Controller } from 'react-hook-form';
+
 import type { useRegisterModel } from './useRegisterModel';
+
 import { Form } from '@/presentation/components/form';
+import { PageTitle } from '@/presentation/components/page-title';
 import { Button } from '@/presentation/components/ui/button';
 import { DatePicker } from '@/presentation/components/ui/date-picker';
-import { Controller } from 'react-hook-form';
 import { ACCOUNT_TYPES, DOCUMENT_TYPES } from '@/shared/constants';
-import { PageTitle } from '@/presentation/components/page-title';
 
-export const RegisterView: FC<ReturnType<typeof useRegisterModel>> = ({
+export const RegisterView: React.FC<ReturnType<typeof useRegisterModel>> = ({
   onSubmit,
   register,
   isPending,

@@ -1,8 +1,23 @@
-import type { FC } from 'react';
-import type { useLoginModel } from './useLoginModel';
 import { Form } from '@/presentation/components/form';
 import { PageTitle } from '@/presentation/components/page-title';
 import { Button } from '@/presentation/components/ui/button';
+
+import type { FC } from 'react';
+import type { useLoginModel } from './useLoginModel';
+
+const texts = {
+  placeholders: {
+    email: 'informe seu e-mail',
+    password: 'informe sua senha',
+  },
+  buttons: {
+    access: 'Acessar',
+    accessing: 'Acessando',
+  },
+  cta: {
+    noAccount: 'Ainda não possui conta? Cadastrar!',
+  },
+};
 
 export const LoginView: FC<ReturnType<typeof useLoginModel>> = ({
   register,
@@ -22,7 +37,7 @@ export const LoginView: FC<ReturnType<typeof useLoginModel>> = ({
               <Form.Field>
                 <Form.Input
                   type="email"
-                  placeholder="informe seu e-mail"
+                  placeholder={texts.placeholders.email}
                   {...register('email')}
                 />
                 {errors.email && (
@@ -34,7 +49,7 @@ export const LoginView: FC<ReturnType<typeof useLoginModel>> = ({
               <Form.Field>
                 <Form.Input
                   type="password"
-                  placeholder="informe sua senha"
+                  placeholder={texts.placeholders.password}
                   {...register('password')}
                 />{' '}
                 {errors.password && (
@@ -51,7 +66,9 @@ export const LoginView: FC<ReturnType<typeof useLoginModel>> = ({
                     disabled={isPending}
                     className="min-w-full"
                   >
-                    {isPending ? 'Acessando...' : 'Acessar'}
+                    {isPending
+                      ? `${texts.buttons.accessing}`
+                      : `${texts.buttons.access}`}
                   </Button>
                   <Button
                     type="button"
@@ -60,7 +77,7 @@ export const LoginView: FC<ReturnType<typeof useLoginModel>> = ({
                     className="min-w-full"
                     onClick={navigateToRegister}
                   >
-                    Ainda não possui conta? Cadastrar!
+                    {texts.cta.noAccount}
                   </Button>
                 </div>
               </div>

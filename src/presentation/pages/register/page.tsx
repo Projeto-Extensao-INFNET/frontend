@@ -1,7 +1,7 @@
-import { useRegisterModel } from './useRegisterModel';
 import { RegisterView } from './register.view';
+import { useRegisterModel } from './useRegisterModel';
 
-export const Register = () => {
+export const RegisterPage = () => {
   const model = useRegisterModel();
 
   return <RegisterView {...model} />;
