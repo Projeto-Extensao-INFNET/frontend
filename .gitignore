@@ -43,5 +43,9 @@ dist-ssr
 !.env.test.example
 !.env.example
 
-# TanStack 
+# TanStack
 .tanstack/
+
+# Storybook
+*storybook.log
+storybook-static
