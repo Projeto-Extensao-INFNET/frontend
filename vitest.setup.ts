@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { beforeAll, afterAll, afterEach, vi } from 'vitest';
-import { cleanup } from './src/__tests__/custom-render';
-import { server } from './src/__mocks__/node';
+import { cleanup } from './test/utils/custom-render';
+import { server } from './test/__mocks__/node';
 
 afterEach(() => cleanup());
 beforeAll(() => server.listen());
