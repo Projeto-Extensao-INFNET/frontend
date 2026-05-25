@@ -5,6 +5,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
+    name: 'unit',
     include: ['**/*.{spec,test}.{ts,tsx}'],
     reporters: ['verbose'],
     environment: 'jsdom',
